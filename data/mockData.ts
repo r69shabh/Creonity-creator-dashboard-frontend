@@ -1,0 +1,112 @@
+export const OPPORTUNITIES = [
+  { 
+      id: "vr-headset-review",
+      title: "VR Headset Review", 
+      brand: "Nexus Tech",
+      category: "Tech", 
+      desc: "Looking for tech influencers to review our latest AI-driven VR headset. Focus on unboxing and first impressions.", 
+      budget: "$500 - $800",
+      budgetMin: 500,
+      budgetMax: 800,
+      platform: ["YouTube", "Instagram"],
+      posted: "2 days ago",
+      type: "Video",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD4kSGWBFj6v9Xj6ElwBij_raSTToO9620CPuAYgCzSLz3kBL3fXthNqS99zABaEStwsQbT2IeoBqGACSJMqOxLAdlxPLfXrNvZfCo0iHYr-0LDrxMPeBgwubmV1jBCkOz_QOKp5PawNBiBkwGfDnnOmpkNtqYov7PkOhtGp-7LgaEupRvgegqbDIsYPQzxK_gYIXexjX-M6xrtBcCOD0umHYA4qviiGJhBhD_6bzIbH1y3kvhP9SmpggpfJoUVzLRq8-FDr8Eny8Pb",
+      logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaaFbQihFfy-F6e5rien4N3nqD2ZVjagkT3ggFv5wZ2ytBjVxB3e5Lkw-2gUBg_mOc4f5FYiQ0Oyh0IQd8HYm49V1abSGN9so7_FUIO7nIMJVa4dg2k954krxoVARfLWHqET9tWAIrvxZViGNb290HSv5nG2vATLeKmVbexOJ6UPbuv0eQg3kUXQYHoRCJAbwj8L8L7ye9IqMX-sHBm0ehaYkW-GV4TYQsbW4xkfa1C1bLafHNqlfawtpnEGQsoYzRnMwznSWulJ-r"
+  },
+  { 
+      id: "morning-routine",
+      title: "Morning Routine", 
+      brand: "Bean & Brew",
+      category: "Lifestyle", 
+      desc: "Integrate our organic coffee brand into your morning routine vlog. Authentic placement required.", 
+      budget: "$350 Fixed",
+      budgetMin: 350,
+      budgetMax: 350,
+      platform: ["Instagram", "TikTok"],
+      posted: "5 hours ago",
+      type: "Story/Reel",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDAZfBlH85Vqe3XYlnDlMGlizg4j1w8Da45_4xlV3Jo2SqeRlC96zGv8tLEddwdVSPeuEVLwE9h3vk_8-3vCd4uu5-ebYFTHqTVKqMx2NarKTCjqMr-xSjd4Io9bGEJ55G7HxVLLFB9Z3UiqNqtdzG1dh3WCFImpCtIgpD3mIM5_lW0RvtpGHR-5XYJU6y0F9gYlq3kuw5Q1bnHsmVkRshaLCjJvgkgcFH6EVNcJVb1_I2dG3rr09272Wi3gK7rFUb4GV4RwO4NmgOJ",
+      logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0KEVIufmRbG5G7uMWmmBaRdcU0MaBYz558XRi5f85Uze8-jAvdH4yqi_QyqMQBU8oqDMooc4g4EarPeiBAPdDhwymdA4sP7cNVnYTdtGAgy81PxhQhB_f2lTIdp-iAksJBIUV7AdBPvQXb6C_m438sEO6Dj_AB3SeDBKzvVwBf95Ju9sPQdlxTzCN3akyDJgD3MXDkXMEF4qnt4YqT4c7JiLSnzjcG0-6bz3XdVvV81r9TDZ8Me0h2O_ojTbRRs3-CPw8tCqF400g"
+  },
+  { 
+      id: "productivity-tool",
+      title: "Productivity Tool", 
+      brand: "TaskFlow",
+      category: "SaaS", 
+      desc: "Showcase how our project management tool helps you stay organized as a creator.", 
+      budget: "$1.5k - $2.5k", 
+      budgetMin: 1500,
+      budgetMax: 2500,
+      platform: ["YouTube"],
+      posted: "1 day ago",
+      type: "Integration",
+      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAvUga-j_HCRlfNP-TDjQbFZF3fY1TPvqygsFa9b7DM-4Msgpq9JmagIFmSKO3Yos535zFeRRCzdssUE2p4HSyjvm70oNwuNtMdBJKAy7ASFa6mRbQc7zu3bHi7fo2Lqvtc0KbgdA8-P4-1i7bvzZNvtaMUUteXfklI7NGw_OvviTk8B3edt2CCy770U9NKS4T0q159AVv2DnTe-_tlZfn2c-zce88laxRwQzDXhv5kSX_Bpa9yTh0QTkGcV7rGzCPYDtg-fVaOgfoO",
+      logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuCbzJmYMka3XY2SY90mz06-ZK9S09_1YMjnP0yrDw_hnXXbRkkwSuBCxiTZx2AvC1ITGpexeJnbOBVSW6bdmpAS4GXhLeiATCF8Q9DTKSZyG8AlV_kMW7sQVcDIZnQ15BahLINB9mgZKy4Kcf6wnn7joxLrqleXm-2Ci1RXsvnApVSpoizr90xGUtYvLNH0F7TqASA2qRamuW9SG1t1D3GDIEy9QdV7rfIWdeTHzkFo8Fdy9cNP3LJpbhny66GnieYtDHJyjcpCcD88"
+  },
+  { 
+      id: "summer-fashion",
+      title: "Summer Collection", 
+      brand: "UrbanStyle",
+      category: "Fashion", 
+      desc: "Try-on haul for our new summer collection. Looking for high-energy creators with an eye for style.", 
+      budget: "$800 - $1.2k", 
+      budgetMin: 800,
+      budgetMax: 1200,
+      platform: ["Instagram", "TikTok"],
+      posted: "Just now",
+      type: "UGC",
+      img: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      logo: "https://ui-avatars.com/api/?name=Urban+Style&background=random"
+  },
+  {
+      id: "fitness-app",
+      title: "30-Day Challenge",
+      brand: "FitLife",
+      category: "Health & Fitness",
+      desc: "Document your 30-day fitness journey using our app features. Daily stories + Weekly recap.",
+      budget: "$2k - $3k",
+      budgetMin: 2000,
+      budgetMax: 3000,
+      platform: ["Instagram", "TikTok"],
+      posted: "4 hours ago",
+      type: "Ambassador",
+      img: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+      logo: "https://ui-avatars.com/api/?name=Fit+Life&background=random"
+  }
+];
+
+export const INITIAL_NOTIFICATIONS = [
+  {
+    id: 1,
+    title: "New bid on VR Headset Review",
+    desc: "TechVision Inc. placed a bid of $550",
+    time: "2 min ago",
+    type: "bid",
+    unread: true,
+  },
+  {
+    id: 2,
+    title: "Campaign ending soon",
+    desc: "Summer Flavor Drop ends in 2 hours",
+    time: "1 hour ago",
+    type: "alert",
+    unread: true,
+  },
+  {
+    id: 3,
+    title: "Payment Released",
+    desc: "Escrow funds for Retro Console Launch released",
+    time: "1 day ago",
+    type: "payment",
+    unread: false,
+  },
+  {
+    id: 4,
+    title: "New Message",
+    desc: "TechFlow AI sent you a message",
+    time: "3 hours ago",
+    type: "message",
+    unread: false,
+  }
+];
