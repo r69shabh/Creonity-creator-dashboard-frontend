@@ -9,8 +9,31 @@ interface OnboardingProps {
 
 const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const [step, setStep] = useState(1);
-  const totalSteps = 8;
+  const totalSteps = 6; 
   
+  // State for form data
+  const [formData, setFormData] = useState({
+      // Step 1: Identity
+      handle: '@alexmorgan',
+      phone: '',
+      location: '',
+      bio: '',
+      // Step 2: Socials
+      socials: { meta: false, youtube: false, tiktok: false, twitch: false },
+      // Step 3: Niche
+      selectedCategories: [] as string[],
+      primaryAudience: '18-34',
+      // Step 4: Rates
+      rates: {
+          video: 1200,
+          post: 800,
+          story: 400
+      },
+      // Step 5: Payout
+      payoutMethod: 'stripe',
+      payoutDetails: ''
+  });
+
   // Scroll to top on step change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -20,376 +43,486 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
   
   const finishOnboarding = () => {
-    onComplete();
+    const btn = document.getElementById('finish-btn');
+    if(btn) btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    setTimeout(onComplete, 800);
+  };
+
+  const toggleSocial = (key: keyof typeof formData.socials) => {
+      setFormData(prev => ({
+          ...prev,
+          socials: { ...prev.socials, [key]: !prev.socials[key] }
+      }));
+  };
+
+  const toggleCategory = (id: string) => {
+      setFormData(prev => {
+          const current = prev.selectedCategories;
+          const updated = current.includes(id) 
+            ? current.filter(c => c !== id) 
+            : [...current, id];
+          return { ...prev, selectedCategories: updated };
+      });
+  };
+
+  // Content for the left sidebar
+  const renderSidebarContent = () => {
+      switch(step) {
+          case 1:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">badge</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">Identity & Verification</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Brands trust verified creators. Add your contact details so we can verify your identity and match you with legitimate offers.</p>
+                  </div>
+              );
+          case 2:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">share_reviews</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">Connect Your Reach</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Link your social accounts to automatically pull follower counts and engagement metrics. This creates your dynamic media kit.</p>
+                  </div>
+              );
+          case 3:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">group</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">Define Your Niche</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Are you a tech reviewer or a fashion icon? Telling us your niche helps our AI recommend relevant campaigns.</p>
+                  </div>
+              );
+          case 4:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">attach_money</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">Set Your Rates</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Establish a baseline for your work. You can always negotiate per campaign, but this sets expectations for brands.</p>
+                  </div>
+              );
+          case 5:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">account_balance</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">Get Paid</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Secure your earnings. We hold funds in escrow and release them directly to your preferred account upon project completion.</p>
+                  </div>
+              );
+          default:
+              return (
+                  <div className="space-y-6 text-white">
+                      <div className="size-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-6 border border-white/30">
+                          <span className="material-symbols-outlined text-[32px]">rocket_launch</span>
+                      </div>
+                      <h2 className="text-3xl font-display font-bold leading-tight">You're Ready to Launch</h2>
+                      <p className="text-white/80 text-lg leading-relaxed">Your professional profile is complete. Step into the dashboard to start your journey.</p>
+                  </div>
+              );
+      }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-950 flex flex-col items-center py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-950 flex font-display selection:bg-primary/30">
       
-      {/* Top Bar */}
-      <div className="w-full max-w-xl flex items-center justify-between mb-8">
-        <div className="flex items-center gap-2">
-            <div className="size-8 bg-gradient-to-tr from-primary to-orange-500 rounded-lg flex items-center justify-center text-white shadow-glow">
-                <span className="material-symbols-outlined text-[18px]">hub</span>
-            </div>
-            <span className="font-display font-bold text-text-primary dark:text-white text-lg tracking-tight">Creonity</span>
-        </div>
-        {step < 8 && (
-            <div className="flex flex-col items-end">
-                <span className="text-xs font-bold text-text-primary dark:text-white">Step {step} of {totalSteps}</span>
-                <span className="text-[10px] text-text-secondary dark:text-gray-500 hidden sm:block">Setup Wizard</span>
-            </div>
-        )}
+      {/* Left Sidebar (Desktop Only) */}
+      <div className="hidden lg:flex w-[40%] bg-primary relative overflow-hidden flex-col justify-between p-12 transition-all duration-500">
+          {/* Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-orange-600 z-0"></div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/10 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 z-0 mix-blend-overlay"></div>
+
+          {/* Logo */}
+          <div className="relative z-10 flex items-center gap-3">
+             <div className="size-10 bg-white text-primary rounded-xl flex items-center justify-center shadow-lg">
+                <span className="material-symbols-outlined text-[24px]">hub</span>
+             </div>
+             <span className="text-2xl font-bold text-white tracking-tight">Creonity</span>
+          </div>
+
+          {/* Dynamic Content */}
+          <div className="relative z-10 my-auto animate-in fade-in slide-in-from-left-8 duration-500 key={step}">
+              {renderSidebarContent()}
+          </div>
+
+          {/* Steps Indicator */}
+          <div className="relative z-10 flex gap-2">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                  <div 
+                    key={i} 
+                    className={`h-1.5 rounded-full transition-all duration-300 ${i <= step ? 'w-8 bg-white' : 'w-2 bg-white/30'}`}
+                  ></div>
+              ))}
+          </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="w-full max-w-xl flex-1 flex flex-col relative">
-        
-        {/* Progress Bar */}
-        {step < 8 && (
-            <div className="w-full h-1 bg-gray-200 dark:bg-gray-800 rounded-full mb-8 sm:mb-12 overflow-hidden">
-                <div 
-                    className="h-full bg-primary transition-all duration-500 ease-out rounded-full"
-                    style={{ width: `${(step / totalSteps) * 100}%` }}
-                ></div>
-            </div>
-        )}
-
-        {/* Step 1: Welcome / Value Intro */}
-        {step === 1 && (
-            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col h-full justify-center">
-                <div className="text-center space-y-4 mb-4">
-                    <h1 className="text-3xl sm:text-4xl font-display font-bold text-text-primary dark:text-white leading-tight">
-                        Work with brands.<br/>Get paid on time.
-                    </h1>
-                    <p className="text-text-secondary dark:text-gray-400 text-base sm:text-lg max-w-md mx-auto leading-relaxed">
-                        Join the workspace designed for professional creators. 
-                    </p>
+      {/* Right Content Area */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-y-auto">
+          
+          {/* Mobile Logo & Progress */}
+          <div className="lg:hidden w-full max-w-md mb-8 flex justify-between items-center">
+             <div className="flex items-center gap-2">
+                <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span className="material-symbols-outlined text-[20px]">hub</span>
                 </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {[
-                        { icon: 'gavel', title: 'Transparent Auctions', desc: 'Bid clearly.' },
-                        { icon: 'lock_clock', title: 'Escrow Payments', desc: 'Secure funds.' },
-                        { icon: 'monitoring', title: 'Deep Analytics', desc: 'Track ROI.' },
-                    ].map((item, i) => (
-                        <div key={i} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-5 rounded-2xl shadow-sm text-center hover:border-primary/50 transition-colors cursor-default group">
-                            <div className="size-10 bg-primary/10 text-primary rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                                <span className="material-symbols-outlined">{item.icon}</span>
-                            </div>
-                            <h3 className="font-bold text-text-primary dark:text-white text-sm mb-1">{item.title}</h3>
-                            <p className="text-xs text-text-secondary dark:text-gray-400">{item.desc}</p>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="pt-4 mt-auto">
-                    <Button size="lg" onClick={nextStep} className="w-full shadow-lg shadow-primary/20">Get Started</Button>
-                </div>
-            </div>
-        )}
-
-        {/* Step 2: Basic Profile Setup */}
-        {step === 2 && (
-             <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-2">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Profile Essentials</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">How should brands identify you?</p>
-                </div>
-
-                <Card className="space-y-5 p-5 sm:p-8">
-                    <div className="flex justify-center mb-2">
-                        <div className="size-24 rounded-full bg-gray-50 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-700 flex flex-col items-center justify-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-all group relative overflow-hidden">
-                             <span className="material-symbols-outlined text-gray-400 group-hover:text-primary mb-1">add_a_photo</span>
-                             <span className="text-[10px] text-gray-400 font-bold uppercase group-hover:text-primary">Upload</span>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Input label="First Name" placeholder="Alex" />
-                        <Input label="Last Name" placeholder="Morgan" />
-                    </div>
-                    <Input label="Display Name" placeholder="@alexmorgan" helperText="Visible to brands on the marketplace." />
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Input label="Location" placeholder="San Francisco, CA" leftIcon="location_on" />
-                        <div>
-                             <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-1.5">Language</label>
-                             <select className="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-border-color dark:border-gray-700 text-text-primary dark:text-white px-4 py-2.5 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none">
-                                 <option>English (US)</option>
-                                 <option>Spanish</option>
-                                 <option>French</option>
-                             </select>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                         <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                         <Button onClick={nextStep} className="flex-[2]">Continue</Button>
-                    </div>
-                </Card>
+                <span className="font-bold text-text-primary dark:text-white text-lg">Creonity</span>
              </div>
-        )}
+             <span className="text-xs font-bold text-text-secondary">Step {step}/{totalSteps}</span>
+          </div>
 
-        {/* Step 3: Connect Socials */}
-        {step === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-2">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Connect Platforms</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">We verify stats via read-only access.</p>
-                </div>
-
-                <div className="space-y-4">
-                    {[
-                        { name: 'Instagram', icon: 'photo_camera', color: 'text-pink-600', bg: 'bg-pink-50 dark:bg-pink-900/20' },
-                        { name: 'YouTube', icon: 'smart_display', color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20' },
-                        { name: 'Twitter / X', icon: 'flutter_dash', color: 'text-blue-400', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-                    ].map((platform, i) => (
-                        <div key={i} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 rounded-xl flex items-center justify-between group hover:border-gray-300 dark:hover:border-gray-700 transition-all shadow-sm">
-                             <div className="flex items-center gap-4">
-                                 <div className={`p-3 rounded-lg ${platform.bg} ${platform.color}`}>
-                                     <span className="material-symbols-outlined">{platform.icon}</span>
-                                 </div>
-                                 <div className="text-left">
-                                     <h3 className="font-bold text-text-primary dark:text-white text-sm">{platform.name}</h3>
-                                     <p className="text-xs text-text-secondary dark:text-gray-500">Not connected</p>
-                                 </div>
-                             </div>
-                             <button className="px-4 py-2 text-xs font-bold border border-gray-200 dark:border-gray-700 rounded-lg text-text-primary dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                 Connect
-                             </button>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex flex-col items-center gap-4 mt-8 pt-4">
-                     <div className="flex gap-3 w-full">
-                         <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                         <Button onClick={nextStep} className="flex-[2]">Continue</Button>
+          <div className="w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-500">
+            
+            {/* Step 1: Identity & Contact */}
+            {step === 1 && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-2">Let's verify your identity</h3>
+                        <p className="text-text-secondary dark:text-gray-400">Complete your profile to get discovered.</p>
                     </div>
-                     <button onClick={nextStep} className="text-xs text-text-secondary dark:text-gray-500 hover:text-text-primary dark:hover:text-white transition-colors">Skip for now</button>
-                </div>
-            </div>
-        )}
 
-        {/* Step 4: Category & Audience */}
-        {step === 4 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-2">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Your Niche</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">Select categories that fit your content.</p>
-                </div>
+                    <div className="flex items-center gap-6">
+                        <div className="relative group cursor-pointer shrink-0">
+                            <div className="size-24 rounded-full bg-gray-100 dark:bg-gray-800 border-2 border-dashed border-gray-300 dark:border-gray-600 flex items-center justify-center overflow-hidden transition-colors group-hover:border-primary group-hover:bg-primary/5">
+                                <span className="material-symbols-outlined text-3xl text-gray-400 group-hover:text-primary transition-colors">add_a_photo</span>
+                            </div>
+                            <div className="absolute bottom-0 right-0 bg-primary text-white rounded-full p-1.5 border-2 border-white dark:border-gray-950 shadow-md">
+                                <span className="material-symbols-outlined text-[14px] block">edit</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-text-primary dark:text-white">Profile Picture</p>
+                            <p className="text-xs text-text-secondary dark:text-gray-500 mt-1">Min 400x400px, PNG or JPG.</p>
+                        </div>
+                    </div>
 
-                <div>
-                    <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-3 px-1">Primary Category</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
-                        {['Tech', 'Lifestyle', 'Fashion', 'Gaming', 'Fitness', 'Travel'].map(cat => (
-                            <button key={cat} className="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm font-medium text-text-secondary dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary transition-all focus:ring-2 focus:ring-primary/20 hover:shadow-sm">
-                                {cat}
+                    <div className="space-y-4">
+                        <Input 
+                            label="Display Handle" 
+                            placeholder="@alexmorgan" 
+                            leftIcon="alternate_email" 
+                            value={formData.handle}
+                            onChange={(e) => setFormData({...formData, handle: e.target.value})}
+                            className="bg-gray-50 dark:bg-gray-900" 
+                        />
+                        <Input 
+                            label="Phone Number" 
+                            type="tel"
+                            placeholder="+1 (555) 000-0000" 
+                            leftIcon="phone" 
+                            value={formData.phone}
+                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                            helperText="Used for account security and urgent campaign alerts."
+                            className="bg-gray-50 dark:bg-gray-900" 
+                        />
+                        <Input 
+                            label="Location" 
+                            placeholder="Los Angeles, CA" 
+                            leftIcon="location_on" 
+                            value={formData.location}
+                            onChange={(e) => setFormData({...formData, location: e.target.value})}
+                            className="bg-gray-50 dark:bg-gray-900" 
+                        />
+                        <div>
+                             <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-1.5">Bio / Tagline</label>
+                             <textarea 
+                                className="w-full rounded-lg bg-gray-50 dark:bg-gray-900 border border-border-color dark:border-gray-700 p-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none text-text-primary dark:text-white"
+                                rows={3}
+                                placeholder="Tell brands about your vibe..."
+                                value={formData.bio}
+                                onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                             ></textarea>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                        <Button onClick={nextStep} className="w-full">Continue</Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Step 2: Social Connections */}
+            {step === 2 && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-2">Connect Accounts</h3>
+                        <p className="text-text-secondary dark:text-gray-400">Link your platforms to verify your reach. We need at least one.</p>
+                    </div>
+
+                    <div className="space-y-4">
+                        {/* Meta */}
+                        <div className="flex items-center justify-between p-4 border border-border-color dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 hover:border-primary/50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg">
+                                    <span className="material-symbols-outlined text-[24px]">public</span> 
+                                </div>
+                                <div>
+                                    <p className="font-bold text-text-primary dark:text-white text-sm">Meta (Instagram/FB)</p>
+                                    <p className="text-xs text-text-secondary dark:text-gray-500">Connect via Graph API</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => toggleSocial('meta')}
+                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${formData.socials.meta ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-text-primary dark:text-white hover:bg-gray-200'}`}
+                            >
+                                {formData.socials.meta ? 'Connected' : 'Connect'}
+                            </button>
+                        </div>
+
+                        {/* YouTube */}
+                        <div className="flex items-center justify-between p-4 border border-border-color dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 hover:border-primary/50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-lg">
+                                    <span className="material-symbols-outlined text-[24px]">smart_display</span> 
+                                </div>
+                                <div>
+                                    <p className="font-bold text-text-primary dark:text-white text-sm">YouTube</p>
+                                    <p className="text-xs text-text-secondary dark:text-gray-500">Channel Stats</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => toggleSocial('youtube')}
+                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${formData.socials.youtube ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-text-primary dark:text-white hover:bg-gray-200'}`}
+                            >
+                                {formData.socials.youtube ? 'Connected' : 'Connect'}
+                            </button>
+                        </div>
+
+                        {/* TikTok */}
+                        <div className="flex items-center justify-between p-4 border border-border-color dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 hover:border-primary/50 transition-colors">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2.5 bg-black/5 dark:bg-gray-800 text-black dark:text-white rounded-lg">
+                                    <span className="material-symbols-outlined text-[24px]">music_note</span> 
+                                </div>
+                                <div>
+                                    <p className="font-bold text-text-primary dark:text-white text-sm">TikTok</p>
+                                    <p className="text-xs text-text-secondary dark:text-gray-500">Profile Data</p>
+                                </div>
+                            </div>
+                            <button 
+                                onClick={() => toggleSocial('tiktok')}
+                                className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${formData.socials.tiktok ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-text-primary dark:text-white hover:bg-gray-200'}`}
+                            >
+                                {formData.socials.tiktok ? 'Connected' : 'Connect'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                        <Button variant="ghost" onClick={prevStep} className="flex-1">Back</Button>
+                        <Button onClick={nextStep} className="flex-1" disabled={!Object.values(formData.socials).some(Boolean)}>Continue</Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Step 3: Niche & Audience */}
+            {step === 3 && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-2">Your Expertise</h3>
+                        <p className="text-text-secondary dark:text-gray-400">Select up to 3 categories that best describe your content.</p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        {[
+                            { id: 'tech', icon: 'devices', label: 'Tech' },
+                            { id: 'lifestyle', icon: 'self_improvement', label: 'Lifestyle' },
+                            { id: 'gaming', icon: 'sports_esports', label: 'Gaming' },
+                            { id: 'fashion', icon: 'checkroom', label: 'Fashion' },
+                            { id: 'fitness', icon: 'fitness_center', label: 'Health' },
+                            { id: 'travel', icon: 'flight', label: 'Travel' },
+                        ].map((cat) => (
+                            <button 
+                                key={cat.id}
+                                onClick={() => toggleCategory(cat.id)}
+                                className={`
+                                    flex flex-col items-center justify-center gap-2 p-4 rounded-xl border transition-all h-28
+                                    ${formData.selectedCategories.includes(cat.id) 
+                                        ? 'border-primary bg-primary/5 text-primary' 
+                                        : 'border-border-color dark:border-gray-800 bg-white dark:bg-gray-900 hover:border-primary/50 text-text-secondary dark:text-gray-400'}
+                                `}
+                            >
+                                <span className="material-symbols-outlined text-[28px]">{cat.icon}</span>
+                                <span className="font-bold text-sm">{cat.label}</span>
                             </button>
                         ))}
                     </div>
 
-                    <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-3 px-1">Audience Geography</label>
-                    <div className="flex flex-wrap gap-2 mb-8">
-                        {['USA', 'Canada', 'UK', 'Europe', 'Asia', 'LatAm'].map(geo => (
-                             <button key={geo} className="px-4 py-2 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-xs font-medium text-text-secondary dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                + {geo}
-                             </button>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-3 mt-8">
-                         <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                         <Button onClick={nextStep} className="flex-[2]">Continue</Button>
-                    </div>
-                </div>
-            </div>
-        )}
-
-        {/* Step 5: Pricing & Availability */}
-        {step === 5 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-2">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Pricing & Availability</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">Set your baseline. Change anytime.</p>
-                </div>
-
-                <Card className="space-y-6 p-5 sm:p-8">
                     <div>
-                        <div className="flex justify-between items-center mb-4">
-                             <label className="text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide">Rate Range</label>
-                             <span className="text-sm font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">$500 - $2,500</span>
-                        </div>
-                        <input type="range" className="w-full accent-primary h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" />
-                        <div className="flex justify-between text-[10px] text-gray-400 mt-2 font-medium">
-                            <span>$0</span>
-                            <span>$10k+</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-3">Deliverables</label>
-                        <div className="flex flex-wrap gap-2">
-                            {['Instagram Reel', 'YouTube Video', 'TikTok', 'Story', 'UGC'].map(d => (
-                                <button key={d} className="px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-bold border border-primary/20">
-                                    {d}
+                        <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-3">Primary Audience Age</label>
+                        <div className="flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl">
+                            {['13-17', '18-34', '35-50', '50+'].map(age => (
+                                <button
+                                    key={age}
+                                    onClick={() => setFormData({...formData, primaryAudience: age})}
+                                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${formData.primaryAudience === age ? 'bg-white dark:bg-gray-700 shadow-sm text-text-primary dark:text-white' : 'text-text-secondary dark:text-gray-500 hover:text-text-primary'}`}
+                                >
+                                    {age}
                                 </button>
                             ))}
-                            <button className="px-3 py-1.5 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 text-xs font-medium hover:text-white hover:border-gray-400 transition-colors">
-                                + Add
-                            </button>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <div className="flex gap-4 pt-4">
+                        <Button variant="ghost" onClick={prevStep} className="flex-1">Back</Button>
+                        <Button onClick={nextStep} className="flex-1" disabled={formData.selectedCategories.length === 0}>Continue</Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Step 4: Rate Card */}
+            {step === 4 && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-2">Rate Card</h3>
+                        <p className="text-text-secondary dark:text-gray-400">Set your starting prices for standard deliverables.</p>
+                    </div>
+
+                    <div className="space-y-6">
                         <div>
-                            <p className="font-bold text-sm text-text-primary dark:text-white">Accepting Work</p>
-                            <p className="text-xs text-text-secondary dark:text-gray-500">Brands can invite you</p>
-                        </div>
-                         <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" defaultChecked className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                        </label>
-                    </div>
-
-                    <div className="flex gap-3 pt-2">
-                         <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                         <Button onClick={nextStep} className="flex-[2]">Continue</Button>
-                    </div>
-                </Card>
-            </div>
-        )}
-
-        {/* Step 6: Payment Setup (Escrow Explained) */}
-        {step === 6 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-4">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Payment Setup</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">Secured via Escrow.</p>
-                </div>
-
-                <div className="w-full">
-                    {/* Visual Flow - Responsive */}
-                    <div className="flex items-center justify-between mb-8 px-0 sm:px-4 relative w-full">
-                        <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-gray-200 dark:bg-gray-800 -z-10"></div>
-                        {[
-                            { label: 'Bid', icon: 'gavel' },
-                            { label: 'Work', icon: 'edit' },
-                            { label: 'Escrow', icon: 'lock' },
-                            { label: 'Paid', icon: 'attach_money' },
-                        ].map((s, i) => (
-                            <div key={i} className="flex flex-col items-center gap-2 bg-gray-50 dark:bg-gray-950 px-1 sm:px-2">
-                                <div className="size-8 sm:size-10 rounded-full bg-white dark:bg-gray-800 border-2 border-primary/20 flex items-center justify-center text-primary shadow-sm">
-                                    <span className="material-symbols-outlined text-[16px] sm:text-[20px]">{s.icon}</span>
-                                </div>
-                                <span className="text-[10px] font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide">{s.label}</span>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-text-primary dark:text-white flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-text-secondary">smart_display</span>
+                                    Dedicated Video
+                                </label>
+                                <span className="text-primary font-bold">${formData.rates.video}</span>
                             </div>
-                        ))}
-                    </div>
-
-                    <Card className="space-y-5 p-6">
-                         <div>
-                            <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-1.5">Payout Method</label>
-                            <select className="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-border-color dark:border-gray-700 text-text-primary dark:text-white px-4 py-3 text-sm outline-none">
-                                <option>Stripe (Recommended)</option>
-                                <option>PayPal</option>
-                                <option>Bank Transfer</option>
-                            </select>
+                            <input 
+                                type="range" min="100" max="10000" step="50" 
+                                value={formData.rates.video}
+                                onChange={(e) => setFormData({...formData, rates: {...formData.rates, video: parseInt(e.target.value)}})}
+                                className="w-full accent-primary h-2 bg-gray-200 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer" 
+                            />
                         </div>
+
                         <div>
-                             <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-1.5">Currency</label>
-                             <select className="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-border-color dark:border-gray-700 text-text-primary dark:text-white px-4 py-3 text-sm outline-none">
-                                <option>USD ($)</option>
-                                <option>EUR (€)</option>
-                                <option>GBP (£)</option>
-                            </select>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-text-primary dark:text-white flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-text-secondary">post</span>
+                                    Sponsored Post
+                                </label>
+                                <span className="text-primary font-bold">${formData.rates.post}</span>
+                            </div>
+                            <input 
+                                type="range" min="50" max="5000" step="50" 
+                                value={formData.rates.post}
+                                onChange={(e) => setFormData({...formData, rates: {...formData.rates, post: parseInt(e.target.value)}})}
+                                className="w-full accent-primary h-2 bg-gray-200 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer" 
+                            />
                         </div>
-                        
-                        <div className="flex gap-3 pt-2">
-                             <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                             <Button onClick={nextStep} className="flex-[2]">Save & Next</Button>
+
+                        <div>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-text-primary dark:text-white flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-text-secondary">auto_stories</span>
+                                    Story Set (3 frames)
+                                </label>
+                                <span className="text-primary font-bold">${formData.rates.story}</span>
+                            </div>
+                            <input 
+                                type="range" min="50" max="2000" step="25" 
+                                value={formData.rates.story}
+                                onChange={(e) => setFormData({...formData, rates: {...formData.rates, story: parseInt(e.target.value)}})}
+                                className="w-full accent-primary h-2 bg-gray-200 dark:bg-gray-800 rounded-lg appearance-none cursor-pointer" 
+                            />
                         </div>
-                    </Card>
-                    <div className="text-center mt-4">
-                        <button onClick={nextStep} className="text-xs font-medium text-text-secondary dark:text-gray-500 hover:underline">Set up later</button>
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                        <Button variant="ghost" onClick={prevStep} className="flex-1">Back</Button>
+                        <Button onClick={nextStep} className="flex-1">Continue</Button>
                     </div>
                 </div>
-            </div>
-        )}
+            )}
 
-        {/* Step 7: Dashboard Prefs */}
-        {step === 7 && (
-             <div className="space-y-6 animate-in fade-in slide-in-from-right-8 duration-300">
-                <div className="text-center mb-2">
-                    <h2 className="text-2xl font-bold text-text-primary dark:text-white">Customize Home</h2>
-                    <p className="text-text-secondary dark:text-gray-400 text-sm">Tailor your workspace.</p>
-                </div>
+            {/* Step 5: Payment Details */}
+            {step === 5 && (
+                <div className="space-y-8">
+                    <div>
+                        <h3 className="text-2xl font-bold text-text-primary dark:text-white mb-2">Financial Setup</h3>
+                        <p className="text-text-secondary dark:text-gray-400">Choose how you want to receive your earnings.</p>
+                    </div>
 
-                <Card className="space-y-4 p-5 sm:p-8">
-                    {['Earnings Summary', 'Active Bids', 'Recommended Gigs'].map((item) => (
-                        <div key={item} className="flex items-center justify-between p-3 border border-gray-100 dark:border-gray-800 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                            <div>
-                                <p className="font-bold text-sm text-text-primary dark:text-white">{item}</p>
-                                <p className="text-[10px] text-text-secondary dark:text-gray-500">Visible on dashboard</p>
+                    <div className="grid grid-cols-2 gap-4">
+                        <button 
+                            onClick={() => setFormData({...formData, payoutMethod: 'stripe'})}
+                            className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${formData.payoutMethod === 'stripe' ? 'border-primary bg-primary/5 text-primary' : 'border-border-color dark:border-gray-800 bg-white dark:bg-gray-900 text-text-secondary dark:text-gray-400'}`}
+                        >
+                            <span className="material-symbols-outlined text-[32px]">credit_card</span>
+                            <span className="text-sm font-bold">Bank / Stripe</span>
+                        </button>
+                        <button 
+                            onClick={() => setFormData({...formData, payoutMethod: 'paypal'})}
+                            className={`p-4 rounded-xl border flex flex-col items-center gap-2 transition-all ${formData.payoutMethod === 'paypal' ? 'border-primary bg-primary/5 text-primary' : 'border-border-color dark:border-gray-800 bg-white dark:bg-gray-900 text-text-secondary dark:text-gray-400'}`}
+                        >
+                            <span className="material-symbols-outlined text-[32px]">payments</span>
+                            <span className="text-sm font-bold">PayPal</span>
+                        </button>
+                    </div>
+
+                    <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl border border-border-color dark:border-gray-800">
+                        {formData.payoutMethod === 'stripe' ? (
+                            <div className="space-y-4">
+                                <Input label="Account Holder Name" placeholder="e.g. Alex Morgan" className="bg-white dark:bg-gray-800" />
+                                <Input label="Routing Number" placeholder="9 digits" className="bg-white dark:bg-gray-800" />
+                                <Input label="Account Number" placeholder="Account number" className="bg-white dark:bg-gray-800" />
                             </div>
-                            <input type="checkbox" defaultChecked className="w-5 h-5 text-primary rounded bg-gray-200 border-transparent focus:ring-primary dark:bg-gray-700" />
+                        ) : (
+                            <div className="space-y-4">
+                                <Input label="PayPal Email Address" type="email" placeholder="alex@example.com" className="bg-white dark:bg-gray-800" />
+                            </div>
+                        )}
+                        <div className="flex items-start gap-2 mt-4 text-[11px] text-text-secondary dark:text-gray-500">
+                            <span className="material-symbols-outlined text-[14px] text-green-600 mt-0.5">lock</span>
+                            Data is encrypted. We use Stripe Connect for secure payouts.
                         </div>
-                    ))}
+                    </div>
+
+                    <div className="flex gap-4 pt-4">
+                        <Button variant="ghost" onClick={prevStep} className="flex-1">Back</Button>
+                        <Button onClick={nextStep} className="flex-1">Review</Button>
+                    </div>
+                </div>
+            )}
+
+            {/* Step 6: Success */}
+            {step === 6 && (
+                <div className="flex flex-col items-center text-center space-y-8 py-8">
+                    <div className="size-24 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center shadow-glow mb-4 animate-bounce-slow">
+                        <span className="material-symbols-outlined text-[48px]">check</span>
+                    </div>
                     
-                    <div className="pt-4 border-t border-gray-100 dark:border-gray-800">
-                        <label className="block text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wide mb-2">Landing Page</label>
-                        <select className="w-full rounded-lg bg-gray-50 dark:bg-gray-800 border border-border-color dark:border-gray-700 text-text-primary dark:text-white px-4 py-2.5 text-sm outline-none">
-                            <option>Dashboard (Default)</option>
-                            <option>Messages</option>
-                            <option>Auctions</option>
-                        </select>
+                    <div className="space-y-2">
+                        <h3 className="text-3xl font-bold text-text-primary dark:text-white">All Systems Go!</h3>
+                        <p className="text-text-secondary dark:text-gray-400 max-w-xs mx-auto">
+                            Your profile is verified and payment rails are set. You are ready to accept campaigns.
+                        </p>
                     </div>
 
-                    <div className="flex gap-3 pt-2">
-                         <Button variant="secondary" onClick={prevStep} className="flex-1">Back</Button>
-                         <Button onClick={nextStep} className="flex-[2]">Finish Setup</Button>
-                    </div>
-                </Card>
-             </div>
-        )}
-
-        {/* Step 8: Complete */}
-        {step === 8 && (
-             <div className="space-y-8 animate-in fade-in zoom-in-95 duration-500 text-center flex flex-col items-center justify-center h-full pt-12 sm:pt-0">
-                <div className="size-24 bg-green-100 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-full flex items-center justify-center shadow-lg shadow-green-500/10">
-                    <span className="material-symbols-outlined text-[48px]">check_circle</span>
-                </div>
-                
-                <div className="space-y-3 max-w-sm mx-auto">
-                    <h1 className="text-3xl font-display font-bold text-text-primary dark:text-white">
-                        You're All Set!
-                    </h1>
-                    <p className="text-text-secondary dark:text-gray-400 text-base leading-relaxed">
-                        Your workspace is ready. Start exploring campaigns and connecting with brands.
-                    </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center w-full max-w-sm">
-                    <Button onClick={finishOnboarding} size="lg" className="flex-1 shadow-lg shadow-primary/20">
-                        Go to Dashboard
-                    </Button>
-                    <Button onClick={finishOnboarding} variant="secondary" size="lg" className="flex-1">
-                        Find Gigs
+                    <Button id="finish-btn" onClick={finishOnboarding} size="lg" className="w-full max-w-xs shadow-xl shadow-primary/30">
+                        Enter Dashboard
                     </Button>
                 </div>
-             </div>
-        )}
+            )}
 
+          </div>
+          
+          {/* Footer - Copyright or Help */}
+          <div className="absolute bottom-6 w-full text-center">
+              <button className="text-[11px] font-bold text-text-secondary dark:text-gray-600 hover:text-primary transition-colors uppercase tracking-widest">
+                  Need Help?
+              </button>
+          </div>
       </div>
-      
-      {/* Footer Links */}
-      {step < 8 && (
-        <div className="w-full text-center py-6 mt-auto">
-            <button className="text-[10px] text-text-secondary dark:text-gray-600 hover:text-primary transition-colors font-medium">
-                Need help? Contact Support
-            </button>
-        </div>
-      )}
     </div>
   );
 };

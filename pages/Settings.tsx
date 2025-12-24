@@ -4,6 +4,8 @@ import { useToast } from '../context/ToastContext';
 interface SettingsProps {
   darkMode?: boolean;
   toggleTheme?: () => void;
+  accentColor?: string;
+  setAccentColor?: (color: string) => void;
 }
 
 interface AppSettings {
@@ -39,7 +41,16 @@ const DEFAULT_SETTINGS: AppSettings = {
   }
 };
 
-const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme }) => {
+const PRESET_COLORS = [
+  { name: 'Sunset Orange', hex: '#E45D3B' },
+  { name: 'Ocean Blue', hex: '#3B82F6' },
+  { name: 'Royal Purple', hex: '#8B5CF6' },
+  { name: 'Emerald Green', hex: '#10B981' },
+  { name: 'Rose Pink', hex: '#EC4899' },
+  { name: 'Golden Amber', hex: '#F59E0B' },
+];
+
+const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme, accentColor, setAccentColor }) => {
   const { addToast } = useToast();
   
   // Initialize state from local storage
@@ -95,6 +106,13 @@ const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme }) => {
     }));
   };
 
+  const handleColorChange = (hex: string) => {
+    if (setAccentColor) {
+      setAccentColor(hex);
+      addToast('Accent color updated', 'success');
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-6 pb-12 p-6">
       
@@ -142,7 +160,56 @@ const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme }) => {
         </div>
       </section>
 
-      {/* 2. Notifications */}
+      {/* 2. Appearance (Theme & Color) */}
+      <section className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 shadow-sm overflow-hidden">
+         <div className="px-6 py-4 border-b border-border-color dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+          <h2 className="text-base font-bold text-text-primary dark:text-white uppercase tracking-wide">Appearance</h2>
+        </div>
+        <div className="p-6 space-y-8">
+           {/* Dark Mode Toggle */}
+           <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                 <div className="size-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-text-secondary dark:text-white transition-colors">
+                     <span className="material-symbols-outlined text-[24px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
+                 </div>
+                 <div>
+                     <p className="font-bold text-text-primary dark:text-white">Dark Mode</p>
+                     <p className="text-xs text-text-secondary dark:text-gray-400">Switch between light and dark themes.</p>
+                 </div>
+              </div>
+              <button 
+                onClick={toggleTheme}
+                className={`w-14 h-8 rounded-full p-1 transition-colors duration-200 ease-in-out ${darkMode ? 'bg-primary' : 'bg-gray-200'}`}
+              >
+                 <div className={`size-6 bg-white rounded-full shadow-sm transition-transform duration-200 ease-in-out ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+              </button>
+           </div>
+
+           <hr className="border-border-color dark:border-gray-700" />
+
+           {/* Accent Color Picker */}
+           <div>
+              <h3 className="font-semibold text-text-primary dark:text-white mb-4">Accent Color</h3>
+              <div className="flex flex-wrap gap-4">
+                {PRESET_COLORS.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => handleColorChange(color.hex)}
+                    className="group relative size-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                    style={{ backgroundColor: color.hex, '--tw-ring-color': color.hex } as React.CSSProperties}
+                    title={color.name}
+                  >
+                    {accentColor === color.hex && (
+                      <span className="material-symbols-outlined text-white text-[20px] drop-shadow-sm">check</span>
+                    )}
+                  </button>
+                ))}
+              </div>
+           </div>
+        </div>
+      </section>
+
+      {/* 3. Notifications */}
       <section className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-border-color dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
           <h2 className="text-base font-bold text-text-primary dark:text-white uppercase tracking-wide">Notifications</h2>
@@ -181,32 +248,6 @@ const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme }) => {
                     </div>
                 </div>
             ))}
-        </div>
-      </section>
-
-      {/* 3. Appearance (Dark Mode) */}
-      <section className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 shadow-sm overflow-hidden">
-         <div className="px-6 py-4 border-b border-border-color dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
-          <h2 className="text-base font-bold text-text-primary dark:text-white uppercase tracking-wide">Appearance</h2>
-        </div>
-        <div className="p-6">
-           <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                 <div className="size-12 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-text-secondary dark:text-white transition-colors">
-                     <span className="material-symbols-outlined text-[24px]">{darkMode ? 'dark_mode' : 'light_mode'}</span>
-                 </div>
-                 <div>
-                     <p className="font-bold text-text-primary dark:text-white">Dark Mode</p>
-                     <p className="text-xs text-text-secondary dark:text-gray-400">Switch between light and dark themes.</p>
-                 </div>
-              </div>
-              <button 
-                onClick={toggleTheme}
-                className={`w-14 h-8 rounded-full p-1 transition-colors duration-200 ease-in-out ${darkMode ? 'bg-primary' : 'bg-gray-200'}`}
-              >
-                 <div className={`size-6 bg-white rounded-full shadow-sm transition-transform duration-200 ease-in-out ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
-              </button>
-           </div>
         </div>
       </section>
 

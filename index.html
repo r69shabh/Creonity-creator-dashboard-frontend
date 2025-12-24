@@ -10,6 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <style type="text/tailwindcss">
+        @layer base {
+            :root {
+                /* Default Primary: #E45D3B (Orange) converted to RGB channels */
+                --color-primary: 228 93 59;
+            }
+        }
         @layer utilities {
             .no-scrollbar::-webkit-scrollbar {
                 display: none;
@@ -32,8 +38,9 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#E45D3B", 
-                        "primary-hover": "#d14b2a",
+                        // Dynamic primary color using CSS variable
+                        "primary": "rgb(var(--color-primary) / <alpha-value>)", 
+                        "primary-hover": "rgb(var(--color-primary) / 0.9)", // slightly transparent as hover approximation
                         "sidebar-bg": "#F9FAFB",
                         "background-light": "#FAFAFA",
                         "border-color": "#E5E7EB",
@@ -65,7 +72,7 @@
                         "card": "0 2px 10px rgba(0, 0, 0, 0.03), 0 10px 25px rgba(0, 0, 0, 0.02)",
                         "card-hover": "0 10px 30px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03)",
                         "float": "0 10px 40px -10px rgba(0, 0, 0, 0.15)",
-                        "glow": "0 0 20px rgba(228, 93, 59, 0.15)",
+                        "glow": "0 0 20px rgb(var(--color-primary) / 0.15)",
                     }
                 },
             },

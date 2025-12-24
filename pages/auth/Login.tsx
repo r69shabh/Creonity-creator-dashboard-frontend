@@ -1,97 +1,150 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 
 interface LoginProps {
-  onLogin: () => void;
+  onLogin: (skipOnboarding?: boolean) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
+  const [email, setEmail] = useState('test@creonity.in');
+  const [password, setPassword] = useState('password');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, validation and API call here.
-    onLogin();
+    
+    // Test Credentials Bypass
+    if (email === 'test@creonity.in' && password === 'password') {
+        onLogin(true); // Skip onboarding
+    } else {
+        onLogin(false); // Normal flow (goes to onboarding if not onboarded)
+    }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-950 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
-        {/* Header */}
-        <div className="text-center space-y-2">
-          <div className="size-12 bg-gradient-to-tr from-primary to-orange-500 rounded-xl flex items-center justify-center text-white shadow-glow mx-auto mb-6">
-            <span className="material-symbols-outlined text-[28px]">hub</span>
-          </div>
-          <h1 className="text-2xl font-display font-bold text-text-primary dark:text-white tracking-tight">
-            Sign in to your workspace
-          </h1>
-          <p className="text-text-secondary dark:text-gray-400 text-sm">
-            Welcome back to Creonity. Please enter your details.
-          </p>
-        </div>
+    <div className="min-h-screen w-full bg-white dark:bg-gray-950 flex font-display selection:bg-primary/30">
+      
+      {/* Left Sidebar (Desktop Only) */}
+      <div className="hidden lg:flex w-[40%] bg-primary relative overflow-hidden flex-col justify-between p-12">
+          {/* Background Elements */}
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-orange-600 z-0"></div>
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl z-0"></div>
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/10 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 z-0 mix-blend-overlay"></div>
 
-        {/* Card */}
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-8 shadow-card">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <Input 
-              label="Email" 
-              type="email" 
-              placeholder="you@example.com" 
-              leftIcon="mail"
-              required
-            />
-            <div className="space-y-1.5">
-               <Input 
-                label="Password" 
-                type="password" 
-                placeholder="••••••••" 
-                leftIcon="lock"
-                required
-              />
-              <div className="flex justify-end">
-                <Link to="#" className="text-xs font-medium text-primary hover:text-primary-hover">Forgot password?</Link>
+          {/* Logo */}
+          <div className="relative z-10 flex items-center gap-3">
+             <div className="size-10 bg-white text-primary rounded-xl flex items-center justify-center shadow-lg">
+                <span className="material-symbols-outlined text-[24px]">hub</span>
+             </div>
+             <span className="text-2xl font-bold text-white tracking-tight">Creonity</span>
+          </div>
+
+          {/* Content */}
+          <div className="relative z-10 space-y-6">
+              <h2 className="text-4xl font-display font-bold text-white leading-tight">
+                  Welcome back to your creative command center.
+              </h2>
+              <p className="text-white/80 text-lg leading-relaxed max-w-md">
+                  Manage your campaigns, track earnings, and connect with top brands all in one place.
+              </p>
+          </div>
+
+          {/* Footer/Testimonial */}
+          <div className="relative z-10">
+              <div className="flex items-center gap-4 bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20 max-w-sm">
+                  <div className="size-10 rounded-full bg-cover bg-center" style={{backgroundImage: 'url("https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=64&h=64")'}}></div>
+                  <div>
+                      <p className="text-sm font-bold text-white">"The analytics are a game changer."</p>
+                      <p className="text-xs text-white/60">David, Tech Reviewer</p>
+                  </div>
               </div>
-            </div>
-
-            <Button type="submit" className="w-full py-3" size="lg">
-              Continue
-            </Button>
-          </form>
-
-          <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white dark:bg-gray-900 px-2 text-text-secondary dark:text-gray-500">Or continue with</span>
-            </div>
           </div>
+      </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-text-primary dark:text-white">
-              <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
-              Google
-            </button>
-            <button className="flex items-center justify-center gap-2 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-text-primary dark:text-white">
-              <img src="https://www.svgrepo.com/show/452229/instagram-1.svg" className="w-5 h-5" alt="Instagram" />
-              Instagram
-            </button>
-          </div>
+      {/* Right Content Area */}
+      <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 relative overflow-y-auto">
+        <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            
+            {/* Mobile Header */}
+            <div className="lg:hidden text-center mb-8">
+                <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-white mx-auto mb-4">
+                    <span className="material-symbols-outlined text-[28px]">hub</span>
+                </div>
+                <h1 className="text-2xl font-bold text-text-primary dark:text-white">Welcome Back</h1>
+            </div>
+
+            <div>
+                <h1 className="hidden lg:block text-3xl font-display font-bold text-text-primary dark:text-white mb-2">
+                    Sign In
+                </h1>
+                <p className="text-text-secondary dark:text-gray-400">
+                    Enter your email and password to access your account.
+                </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+                <Input 
+                  label="Email" 
+                  type="email" 
+                  placeholder="you@example.com" 
+                  leftIcon="mail"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-gray-50 dark:bg-gray-900 border-transparent focus:bg-white dark:focus:bg-gray-800"
+                />
+                <div className="space-y-1.5">
+                   <Input 
+                    label="Password" 
+                    type="password" 
+                    placeholder="••••••••" 
+                    leftIcon="lock"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-gray-50 dark:bg-gray-900 border-transparent focus:bg-white dark:focus:bg-gray-800"
+                  />
+                  <div className="flex justify-end">
+                    <Link to="#" className="text-xs font-bold text-primary hover:text-primary-hover">Forgot password?</Link>
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full py-3 shadow-lg shadow-primary/20" size="lg">
+                  Sign In
+                </Button>
+            </form>
+
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                </div>
+                <div className="relative flex justify-center text-xs uppercase font-bold tracking-wide">
+                  <span className="bg-white dark:bg-gray-950 px-2 text-gray-400">Or continue with</span>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+                <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-bold text-text-primary dark:text-white">
+                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
+                  Google
+                </button>
+                <button className="flex items-center justify-center gap-2 px-4 py-3 border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm font-bold text-text-primary dark:text-white">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Meta_Platforms_Inc._logo_2021.svg" className="w-5 h-5" alt="Meta" />
+                  Meta
+                </button>
+            </div>
+
+            <p className="text-center text-sm text-text-secondary dark:text-gray-500">
+                Don't have an account? <Link to="/signup" className="font-bold text-primary hover:underline">Create one</Link>
+            </p>
         </div>
-
-        {/* Footer */}
-        <div className="text-center text-sm">
-          <span className="text-text-secondary dark:text-gray-500">Don't have an account? </span>
-          <Link to="/signup" className="font-bold text-text-primary dark:text-white hover:text-primary transition-colors">Create an account</Link>
+        
+        <div className="absolute bottom-6 flex gap-6 text-xs font-bold text-gray-400">
+            <Link to="#" className="hover:text-gray-600 dark:hover:text-gray-300">Privacy Policy</Link>
+            <Link to="#" className="hover:text-gray-600 dark:hover:text-gray-300">Terms of Service</Link>
         </div>
-
-        <div className="flex justify-center gap-4 text-xs text-text-secondary dark:text-gray-600">
-          <Link to="#">Terms of Service</Link>
-          <Link to="#">Privacy Policy</Link>
-        </div>
-
       </div>
     </div>
   );
