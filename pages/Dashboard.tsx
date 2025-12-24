@@ -52,9 +52,13 @@ const Dashboard: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
-    // Check if tutorial has been completed
-    const isCompleted = localStorage.getItem('creonity_dashboard_tutorial_completed');
-    if (!isCompleted) {
+    // Only show tutorial if:
+    // 1. It is a new user session (came from onboarding)
+    // 2. AND it hasn't been explicitly marked as completed in localStorage (safety check)
+    const isNewUserSession = sessionStorage.getItem('creonity_tour_session') === 'true';
+    const isCompleted = localStorage.getItem('creonity_dashboard_tutorial_completed') === 'true';
+
+    if (isNewUserSession && !isCompleted) {
        // Small delay to ensure layout is stable
        const timer = setTimeout(() => setShowTutorial(true), 1000);
        return () => clearTimeout(timer);

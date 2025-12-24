@@ -16,6 +16,10 @@ import FolderView from './pages/FolderView';
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
 import Onboarding from './pages/onboarding/Onboarding';
+import Campaigns from './pages/Campaigns';
+import CampaignDetail from './pages/CampaignDetail';
+import Marketplace from './pages/Marketplace';
+import MarketplaceDetail from './pages/MarketplaceDetail';
 import { EntityProfileProvider } from './context/EntityProfileContext';
 import { ToastProvider } from './context/ToastContext';
 import EntityDrawer from './components/EntityDrawer';
@@ -39,12 +43,16 @@ const AppRoutes: React.FC<{
   // Determine page title
   const getPageTitle = (pathname: string) => {
     if (matchPath("/gigs/:id", pathname)) return 'Gig Details';
+    if (matchPath("/campaigns/:id", pathname)) return 'Campaign Details';
     if (matchPath("/collaborations/:id", pathname)) return 'Workroom';
     if (matchPath("/drive/:folderName", pathname)) return 'Workspace';
+    if (matchPath("/marketplace/:id", pathname)) return 'Opportunity Details';
     
     switch (pathname) {
       case '/': return 'Overview';
       case '/gigs': return 'Find Gigs';
+      case '/campaigns': return 'Campaigns';
+      case '/marketplace': return 'Marketplace';
       case '/collaborations': return 'My Work & Applications';
       case '/analytics': return 'Analytics & Insights';
       case '/wallet': return 'Payments & Escrow';
@@ -106,6 +114,10 @@ const AppRoutes: React.FC<{
             <Route path="/" element={<Dashboard />} />
             <Route path="/gigs" element={<Gigs />} />
             <Route path="/gigs/:id" element={<GigDetail />} />
+            <Route path="/campaigns" element={<Campaigns />} />
+            <Route path="/campaigns/:id" element={<CampaignDetail />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
             <Route path="/collaborations" element={<Collaborations />} />
             <Route path="/collaborations/:id" element={<CollaborationDetail />} />
             <Route path="/drive/:folderName" element={<FolderView />} />
@@ -163,6 +175,9 @@ const AppContent: React.FC = () => {
   // -- Actions --
   const handleLogin = (skipOnboarding = false) => {
     localStorage.setItem('creonity_auth', 'true');
+    // Standard login does NOT trigger tutorials
+    sessionStorage.removeItem('creonity_tour_session');
+    
     setIsAuthenticated(true);
     if (skipOnboarding) {
         localStorage.setItem('creonity_onboarded', 'true');
@@ -172,12 +187,15 @@ const AppContent: React.FC = () => {
 
   const handleCompleteOnboarding = () => {
     localStorage.setItem('creonity_onboarded', 'true');
+    // Set a global session flag to enable tutorials for this session (new account flow)
+    sessionStorage.setItem('creonity_tour_session', 'true');
     setIsOnboarded(true);
   };
 
   const handleLogout = () => {
     localStorage.removeItem('creonity_auth');
     localStorage.removeItem('creonity_onboarded');
+    sessionStorage.clear(); // Clear session flags to ensure a clean state
     setIsAuthenticated(false);
     setIsOnboarded(false);
   };

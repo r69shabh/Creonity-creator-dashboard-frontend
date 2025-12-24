@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 
 const Marketplace: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeFilterDropdown, setActiveFilterDropdown] = useState<string | null>(null);
   
-  // Mock filter states
+  // Filter States
   const [filters, setFilters] = useState({
     tech: true,
     lifestyle: true,
@@ -13,10 +14,15 @@ const Marketplace: React.FC = () => {
     instagram: true,
     youtube: true,
     tiktok: false,
+    budget: 0,
   });
 
   const toggleFilter = (key: keyof typeof filters) => {
     setFilters(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const toggleDropdown = (name: string) => {
+    setActiveFilterDropdown(activeFilterDropdown === name ? null : name);
   };
 
   const opportunities = [
@@ -70,54 +76,40 @@ const Marketplace: React.FC = () => {
     }
   ];
 
+  const FilterButton: React.FC<{ label: string; name: string; isActive?: boolean; children?: React.ReactNode }> = ({ label, name, isActive, children }) => (
+    <div className="relative">
+      <button 
+        onClick={() => toggleDropdown(name)}
+        className={`px-4 py-2 rounded-full border text-sm font-bold flex items-center gap-2 transition-all active:scale-95 ${activeFilterDropdown === name || isActive ? 'bg-primary text-white border-primary shadow-md shadow-primary/20' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-text-secondary dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'}`}
+      >
+        {label}
+        <span className={`material-symbols-outlined text-[18px] transition-transform ${activeFilterDropdown === name ? 'rotate-180' : ''}`}>expand_more</span>
+      </button>
+      
+      {activeFilterDropdown === name && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setActiveFilterDropdown(null)}></div>
+          <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-float border border-gray-200 dark:border-gray-700 p-4 z-20 animate-in fade-in zoom-in-95 duration-100 ring-1 ring-black/5">
+             {children}
+          </div>
+        </>
+      )}
+    </div>
+  );
+
   return (
-    <div className="flex h-full max-w-[1800px] mx-auto">
-      {/* Sidebar Filters */}
-      <aside className="w-64 hidden lg:flex flex-col border-r border-border-color dark:border-gray-700 bg-white dark:bg-gray-800 h-full overflow-y-auto p-6 gap-8">
-        <div>
-           <h2 className="text-sm font-bold text-text-primary dark:text-white uppercase tracking-wide mb-4">Filters</h2>
-           <button className="text-xs text-primary hover:underline">Reset All</button>
-        </div>
+    <div className="flex flex-col h-full max-w-[1800px] mx-auto p-6 lg:p-8 overflow-hidden relative">
+      
+      {/* Header */}
+      <div className="mb-8 shrink-0">
+         <h1 className="text-3xl font-display font-bold text-text-primary dark:text-white mb-2">Marketplace</h1>
+         <p className="text-text-secondary dark:text-gray-400">Discover exclusive brand opportunities.</p>
+      </div>
 
-        <div>
-            <h3 className="text-sm font-bold text-text-primary dark:text-white mb-3">Category</h3>
-            <div className="space-y-2">
-                {['Tech', 'Lifestyle', 'Gaming', 'Fashion'].map(cat => (
-                    <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={filters[cat.toLowerCase() as keyof typeof filters]} onChange={() => toggleFilter(cat.toLowerCase() as keyof typeof filters)} className="rounded text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" />
-                        <span className="text-sm text-text-secondary dark:text-gray-300">{cat}</span>
-                    </label>
-                ))}
-            </div>
-        </div>
-
-        <div>
-            <h3 className="text-sm font-bold text-text-primary dark:text-white mb-3">Platform</h3>
-            <div className="space-y-2">
-                {['Instagram', 'YouTube', 'TikTok'].map(plat => (
-                    <label key={plat} className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={filters[plat.toLowerCase() as keyof typeof filters]} onChange={() => toggleFilter(plat.toLowerCase() as keyof typeof filters)} className="rounded text-primary focus:ring-primary dark:bg-gray-700 dark:border-gray-600" />
-                        <span className="text-sm text-text-secondary dark:text-gray-300">{plat}</span>
-                    </label>
-                ))}
-            </div>
-        </div>
-
-        <div>
-            <h3 className="text-sm font-bold text-text-primary dark:text-white mb-3">Budget Range</h3>
-             <div className="flex items-center gap-2 text-sm text-text-secondary mb-2">
-                 <span>$0</span>
-                 <input type="range" className="flex-1 accent-primary" />
-                 <span>$5k+</span>
-             </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-y-auto">
-         {/* Search Bar */}
-         <div className="mb-8 relative">
-             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-secondary">
+      {/* Search & Filters */}
+      <div className="flex flex-col xl:flex-row gap-4 mb-8 shrink-0 z-20">
+         <div className="relative flex-1">
+             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                  <span className="material-symbols-outlined">search</span>
              </span>
              <input 
@@ -125,16 +117,79 @@ const Marketplace: React.FC = () => {
                 placeholder="Search for brands, categories, or keywords..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-border-color dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm"
+                className="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm transition-all outline-none text-sm font-medium placeholder-gray-400"
              />
          </div>
 
+         <div className="flex flex-wrap items-center gap-2">
+            <FilterButton label="Category" name="category" isActive={Object.values(filters).slice(0, 4).some(Boolean)}>
+                <div className="space-y-1">
+                    {['Tech', 'Lifestyle', 'Gaming', 'Fashion'].map(cat => (
+                        <label key={cat} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                            <input 
+                                type="checkbox" 
+                                checked={filters[cat.toLowerCase() as keyof typeof filters] as boolean}
+                                onChange={() => toggleFilter(cat.toLowerCase() as keyof typeof filters)}
+                                className="rounded text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4" 
+                            />
+                            <span className="text-sm font-medium text-text-primary dark:text-gray-200">{cat}</span>
+                        </label>
+                    ))}
+                </div>
+            </FilterButton>
+
+            <FilterButton label="Platform" name="platform" isActive={Object.values(filters).slice(4, 7).some(Boolean)}>
+                <div className="space-y-1">
+                    {['Instagram', 'YouTube', 'TikTok'].map(plat => (
+                        <label key={plat} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                            <input 
+                                type="checkbox" 
+                                checked={filters[plat.toLowerCase() as keyof typeof filters] as boolean}
+                                onChange={() => toggleFilter(plat.toLowerCase() as keyof typeof filters)}
+                                className="rounded text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4" 
+                            />
+                            <span className="text-sm font-medium text-text-primary dark:text-gray-200">{plat}</span>
+                        </label>
+                    ))}
+                </div>
+            </FilterButton>
+
+            <FilterButton label="Budget" name="budget" isActive={filters.budget > 0}>
+                <div className="px-2 py-2">
+                    <div className="flex justify-between items-center mb-4">
+                        <span className="text-xs font-bold text-text-secondary uppercase">Min Budget</span>
+                        <span className="text-sm font-bold text-primary">${filters.budget}</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        min="0" max="5000" step="100" 
+                        value={filters.budget}
+                        onChange={(e) => setFilters({...filters, budget: parseInt(e.target.value)})}
+                        className="w-full accent-primary h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer" 
+                    />
+                    <div className="flex justify-between text-[10px] text-gray-400 mt-2 font-bold">
+                        <span>$0</span>
+                        <span>$5k+</span>
+                    </div>
+                </div>
+            </FilterButton>
+
+            <button 
+                onClick={() => setFilters({ tech: false, lifestyle: false, gaming: false, fashion: false, instagram: false, youtube: false, tiktok: false, budget: 0 })}
+                className="h-10 px-4 text-sm text-gray-500 font-bold hover:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+            >
+                Reset
+            </button>
+         </div>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="flex-1 overflow-y-auto pr-2 pb-10">
          <div className="flex items-center justify-between mb-4">
              <h2 className="text-xl font-bold text-text-primary dark:text-white">Recent Opportunities</h2>
              <span className="text-sm text-text-secondary dark:text-gray-400">{opportunities.length} results found</span>
          </div>
 
-         {/* Grid */}
          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {opportunities.map((item) => (
                 <Link to={`/marketplace/${item.id}`} key={item.id} className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 shadow-card hover:shadow-lg transition-all group flex flex-col overflow-hidden h-full">

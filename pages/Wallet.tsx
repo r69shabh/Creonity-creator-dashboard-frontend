@@ -28,8 +28,9 @@ const Wallet: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState(false);
 
   useEffect(() => {
+    const isNewUserSession = sessionStorage.getItem('creonity_tour_session') === 'true';
     const isCompleted = localStorage.getItem('creonity_wallet_tutorial_completed');
-    if (!isCompleted) {
+    if (isNewUserSession && !isCompleted) {
        const timer = setTimeout(() => setShowTutorial(true), 800);
        return () => clearTimeout(timer);
     }
