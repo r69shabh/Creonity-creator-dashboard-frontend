@@ -135,18 +135,16 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
     <div className="min-h-screen w-full bg-white dark:bg-gray-950 flex font-display selection:bg-primary/30">
       
       {/* Left Sidebar (Desktop Only) */}
-      <div className="hidden lg:flex w-[40%] bg-primary relative overflow-hidden flex-col justify-between p-12 transition-all duration-500">
+      <div className="hidden lg:flex w-[40%] bg-brand-navy relative overflow-hidden flex-col justify-between p-12 transition-all duration-500">
           {/* Background Elements */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-orange-600 z-0"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#000563] to-[#075CD1] z-0"></div>
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl z-0"></div>
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/10 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/20 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 z-0 mix-blend-overlay"></div>
 
           {/* Logo */}
           <div className="relative z-10 flex items-center gap-3">
-             <div className="size-10 bg-white text-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span className="material-symbols-outlined text-[24px]">hub</span>
-             </div>
+             <img src="https://cdn-icons-png.flaticon.com/512/6062/6062646.png" alt="Creonity Logo" className="size-10 object-contain brightness-0 invert" />
              <span className="text-2xl font-bold text-white tracking-tight">Creonity</span>
           </div>
 
@@ -172,9 +170,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           {/* Mobile Logo & Progress */}
           <div className="lg:hidden w-full max-w-md mb-8 flex justify-between items-center">
              <div className="flex items-center gap-2">
-                <div className="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                    <span className="material-symbols-outlined text-[20px]">hub</span>
-                </div>
+                <img src="https://cdn-icons-png.flaticon.com/512/6062/6062646.png" alt="Creonity Logo" className="size-8 object-contain" />
                 <span className="font-bold text-text-primary dark:text-white text-lg">Creonity</span>
              </div>
              <span className="text-xs font-bold text-text-secondary">Step {step}/{totalSteps}</span>

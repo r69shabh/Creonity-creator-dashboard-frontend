@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import { BRAND_LOGO } from '../../types';
 
 interface LoginProps {
   onLogin: (skipOnboarding?: boolean) => void;
@@ -23,21 +24,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white dark:bg-gray-950 flex font-display selection:bg-primary/30">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-950 flex font-display selection:bg-brand-blue/30">
       
       {/* Left Sidebar (Desktop Only) */}
-      <div className="hidden lg:flex w-[40%] bg-primary relative overflow-hidden flex-col justify-between p-12">
+      <div className="hidden lg:flex w-[40%] bg-brand-navy relative overflow-hidden flex-col justify-between p-12">
           {/* Background Elements */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary to-orange-600 z-0"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#000563] to-[#075CD1] z-0"></div>
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-white/10 rounded-full blur-3xl z-0"></div>
-          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/10 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
+          <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-black/20 rounded-full blur-3xl z-0 translate-y-1/2 translate-x-1/4"></div>
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 z-0 mix-blend-overlay"></div>
 
           {/* Logo */}
           <div className="relative z-10 flex items-center gap-3">
-             <div className="size-10 bg-white text-primary rounded-xl flex items-center justify-center shadow-lg">
-                <span className="material-symbols-outlined text-[24px]">hub</span>
-             </div>
+             <img src={BRAND_LOGO} alt="Creonity Logo" className="size-10 object-contain brightness-0 invert" />
              <span className="text-2xl font-bold text-white tracking-tight">Creonity</span>
           </div>
 
@@ -69,9 +68,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             
             {/* Mobile Header */}
             <div className="lg:hidden text-center mb-8">
-                <div className="size-12 bg-primary rounded-xl flex items-center justify-center text-white mx-auto mb-4">
-                    <span className="material-symbols-outlined text-[28px]">hub</span>
-                </div>
+                <img src={BRAND_LOGO} alt="Creonity Logo" className="size-12 mx-auto mb-4 object-contain" />
                 <h1 className="text-2xl font-bold text-text-primary dark:text-white">Welcome Back</h1>
             </div>
 
@@ -107,11 +104,11 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     className="bg-gray-50 dark:bg-gray-900 border-transparent focus:bg-white dark:focus:bg-gray-800"
                   />
                   <div className="flex justify-end">
-                    <Link to="#" className="text-xs font-bold text-primary hover:text-primary-hover">Forgot password?</Link>
+                    <Link to="#" className="text-xs font-bold text-brand-blue hover:text-brand-deep">Forgot password?</Link>
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full py-3 shadow-lg shadow-primary/20" size="lg">
+                <Button type="submit" className="w-full py-3 shadow-lg shadow-brand-blue/20" size="lg">
                   Sign In
                 </Button>
             </form>
@@ -137,7 +134,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <p className="text-center text-sm text-text-secondary dark:text-gray-500">
-                Don't have an account? <Link to="/signup" className="font-bold text-primary hover:underline">Create one</Link>
+                Don't have an account? <Link to="/signup" className="font-bold text-brand-blue hover:underline">Create one</Link>
             </p>
         </div>
         

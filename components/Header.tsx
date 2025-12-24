@@ -34,8 +34,9 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
 
   const getIcon = (type: string) => {
     switch(type) {
-      case 'bid': return { icon: 'gavel', color: 'text-primary bg-orange-50 dark:bg-orange-900/30' };
-      case 'alert': return { icon: 'timer', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/30 dark:text-orange-400' };
+      // Changed orange to teal
+      case 'bid': return { icon: 'gavel', color: 'text-brand-blue bg-blue-50 dark:bg-blue-900/30' };
+      case 'alert': return { icon: 'timer', color: 'text-accent-teal-dark bg-[#1BD1C9]/10 dark:text-[#1BD1C9] dark:bg-[#036964]/30' };
       case 'payment': return { icon: 'payments', color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' };
       case 'message': return { icon: 'chat', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' };
       default: return { icon: 'notifications', color: 'text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-400' };
@@ -58,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
             className={`relative p-2 rounded-lg transition-colors ${showNotifications ? 'bg-gray-100 dark:bg-gray-800 text-text-primary dark:text-white' : 'text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-text-primary dark:hover:text-white'}`}
           >
             <span className="material-symbols-outlined">notifications</span>
-            {unreadCount > 0 && <span className="absolute top-2 right-2 size-2 bg-primary rounded-full ring-2 ring-white dark:ring-gray-900"></span>}
+            {unreadCount > 0 && <span className="absolute top-2 right-2 size-2 bg-accent-teal rounded-full ring-2 ring-white dark:ring-gray-900"></span>}
           </button>
 
           {showNotifications && (
@@ -66,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
               <div className="px-4 py-3 border-b border-border-color dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex justify-between items-center">
                 <h3 className="font-bold text-text-primary dark:text-white text-sm">Notifications</h3>
                 {unreadCount > 0 && (
-                  <button onClick={markAllRead} className="text-[10px] font-bold text-primary hover:text-primary-hover uppercase tracking-wider">Mark all read</button>
+                  <button onClick={markAllRead} className="text-[10px] font-bold text-brand-blue hover:text-brand-blue/80 uppercase tracking-wider">Mark all read</button>
                 )}
               </div>
               <div className="max-h-[360px] overflow-y-auto">
@@ -74,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
                   const style = getIcon(item.type);
                   return (
                     <div key={item.id} className={`p-4 border-b border-border-color dark:border-gray-700 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors flex gap-3 group relative cursor-pointer ${item.unread ? 'bg-white dark:bg-gray-900' : 'bg-gray-50/30 dark:bg-gray-800/30'}`}>
-                      {item.unread && <div className="absolute left-0 top-4 bottom-4 w-1 bg-primary rounded-r-full"></div>}
+                      {item.unread && <div className="absolute left-0 top-4 bottom-4 w-1 bg-brand-blue rounded-r-full"></div>}
                       <div className={`size-10 rounded-full ${style.color} flex items-center justify-center shrink-0 border border-white dark:border-gray-700 shadow-sm`}>
                         <span className="material-symbols-outlined text-[20px]">{style.icon}</span>
                       </div>

@@ -122,45 +122,32 @@ const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ steps, isOpen, onComp
             break;
     }
 
-    // Safety check to keep tooltip on screen horizontally
-    if (targetRect) {
-         // (Additional logic could go here to clamp values to window width)
-    }
-
     return { top, left, transform, width: '320px', maxWidth: '90vw' };
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden isolate">
-      {/* 1. The Backdrop (Dark overlay with a 'hole' cut out using CSS clip-path or simple SVG, 
-          but for simplicity/responsiveness, we use a composed div structure or just 4 divs.
-          Here we use a full screen dim and a high z-index 'cutout' simulator) 
-      */}
-      
-      {/* Background Dimmer */}
       <div className="absolute inset-0 bg-gray-900/70 backdrop-blur-[2px] transition-all duration-300"></div>
 
-      {/* 2. The Spotlight Target (The 'Hole') */}
       {targetRect && (
         <div 
-            className="absolute transition-all duration-300 ease-in-out border-2 border-primary shadow-[0_0_0_9999px_rgba(17,24,39,0.75)] rounded-xl"
+            className="absolute transition-all duration-300 ease-in-out border-2 border-brand-blue shadow-[0_0_0_9999px_rgba(17,24,39,0.75)] rounded-xl"
             style={{
                 top: targetRect.top - 4,
                 left: targetRect.left - 4,
                 width: targetRect.width + 8,
                 height: targetRect.height + 8,
-                boxShadow: '0 0 0 9999px rgba(17, 24, 39, 0.85), 0 0 20px rgba(228, 93, 59, 0.5)'
+                // Updated glow to teal/blue
+                boxShadow: '0 0 0 9999px rgba(17, 24, 39, 0.85), 0 0 20px rgba(7, 92, 209, 0.5)' 
             }}
         >
-            {/* Pulsing indicator */}
             <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-teal opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-accent-teal"></span>
             </span>
         </div>
       )}
 
-      {/* 3. The Tooltip Card */}
       <div 
         className="absolute transition-all duration-300 ease-out z-50"
         style={getTooltipStyle()}
@@ -168,7 +155,7 @@ const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ steps, isOpen, onComp
         <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 shadow-2xl border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in-95 duration-300">
             <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full border border-primary/20">
+                    <span className="bg-brand-blue/10 text-brand-blue text-[10px] font-bold px-2 py-0.5 rounded-full border border-brand-blue/20">
                         Step {currentStepIndex + 1}/{steps.length}
                     </span>
                 </div>
@@ -187,7 +174,7 @@ const TutorialOverlay: React.FC<TutorialOverlayProps> = ({ steps, isOpen, onComp
             <div className="flex items-center justify-between">
                  <div className="flex gap-1">
                      {steps.map((_, i) => (
-                         <div key={i} className={`h-1.5 rounded-full transition-all ${i === currentStepIndex ? 'w-6 bg-primary' : 'w-1.5 bg-gray-200 dark:bg-gray-700'}`}></div>
+                         <div key={i} className={`h-1.5 rounded-full transition-all ${i === currentStepIndex ? 'w-6 bg-brand-blue' : 'w-1.5 bg-gray-200 dark:bg-gray-700'}`}></div>
                      ))}
                  </div>
                  <div className="flex gap-2">

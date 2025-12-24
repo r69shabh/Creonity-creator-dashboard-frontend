@@ -30,11 +30,9 @@ const AppRoutes: React.FC<{
   logout: () => void;
   toggleTheme: () => void;
   darkMode: boolean;
-  accentColor: string;
-  setAccentColor: (color: string) => void;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
-}> = ({ isAuthenticated, isOnboarded, login, completeOnboarding, logout, toggleTheme, darkMode, accentColor, setAccentColor, mobileMenuOpen, setMobileMenuOpen }) => {
+}> = ({ isAuthenticated, isOnboarded, login, completeOnboarding, logout, toggleTheme, darkMode, mobileMenuOpen, setMobileMenuOpen }) => {
   const location = useLocation();
   const isMessagesPage = location.pathname === '/messages';
 
@@ -114,7 +112,7 @@ const AppRoutes: React.FC<{
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings darkMode={darkMode} toggleTheme={toggleTheme} accentColor={accentColor} setAccentColor={setAccentColor} />} />
+            <Route path="/settings" element={<Settings darkMode={darkMode} toggleTheme={toggleTheme} />} />
             <Route path="/messages" element={<Messages onMenuClick={() => setMobileMenuOpen(true)} />} />
             {/* Redirect any unknown routes back to dashboard */}
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -149,19 +147,6 @@ const AppContent: React.FC = () => {
     }
     return savedTheme === 'dark';
   });
-
-  // -- Accent Color Management --
-  // Helper to hex to rgb
-  const hexToRgb = (hex: string) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? 
-      `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : 
-      '228 93 59'; // Default orange
-  };
-
-  const [accentColor, setAccentColor] = useState(() => {
-    return localStorage.getItem('creonity_accent') || '#E45D3B'; // Default Orange
-  });
   
   useEffect(() => {
     if (darkMode) {
@@ -172,13 +157,6 @@ const AppContent: React.FC = () => {
       localStorage.setItem('creonity_theme', 'light');
     }
   }, [darkMode]);
-
-  // Apply accent color to CSS variable
-  useEffect(() => {
-    const rgb = hexToRgb(accentColor);
-    document.documentElement.style.setProperty('--color-primary', rgb);
-    localStorage.setItem('creonity_accent', accentColor);
-  }, [accentColor]);
 
   const toggleTheme = () => setDarkMode(!darkMode);
 
@@ -213,8 +191,6 @@ const AppContent: React.FC = () => {
       logout={handleLogout}
       toggleTheme={toggleTheme}
       darkMode={darkMode}
-      accentColor={accentColor}
-      setAccentColor={setAccentColor}
       mobileMenuOpen={mobileMenuOpen}
       setMobileMenuOpen={setMobileMenuOpen}
     />

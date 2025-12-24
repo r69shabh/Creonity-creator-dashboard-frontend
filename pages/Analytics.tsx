@@ -44,7 +44,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="bg-white dark:bg-gray-900 p-3 border border-border-color dark:border-gray-700 rounded-lg shadow-lg">
         <p className="text-sm font-bold text-text-primary dark:text-white">{label}</p>
-        <p className="text-sm text-primary">
+        <p className="text-sm text-brand-blue">
           {payload[0].value}
         </p>
       </div>
@@ -96,7 +96,7 @@ const Analytics: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-auto">
-                 <span className={`text-xs font-medium ${item.neutral ? 'text-orange-500' : 'text-green-600 dark:text-green-400'} flex items-center gap-1`}>
+                 <span className={`text-xs font-medium ${item.neutral ? 'text-accent-teal-dark' : 'text-green-600 dark:text-green-400'} flex items-center gap-1`}>
                     <span className="material-symbols-outlined text-[14px]">{item.neutral ? 'remove' : 'trending_up'}</span> 
                     {item.change}
                  </span>
@@ -123,13 +123,13 @@ const Analytics: React.FC = () => {
                    <AreaChart data={earningsData}>
                       <defs>
                         <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                           <stop offset="5%" stopColor="#E45D3B" stopOpacity={0.1}/>
-                           <stop offset="95%" stopColor="#E45D3B" stopOpacity={0}/>
+                           <stop offset="5%" stopColor="#075CD1" stopOpacity={0.1}/>
+                           <stop offset="95%" stopColor="#075CD1" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#6B7280'}} dy={10} />
                       <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#E5E7EB', strokeWidth: 1 }} />
-                      <Area type="monotone" dataKey="value" stroke="#E45D3B" strokeWidth={3} fillOpacity={1} fill="url(#chartGradient)" />
+                      <Area type="monotone" dataKey="value" stroke="#075CD1" strokeWidth={3} fillOpacity={1} fill="url(#chartGradient)" />
                    </AreaChart>
                 </ResponsiveContainer>
              </div>
@@ -176,7 +176,7 @@ const Analytics: React.FC = () => {
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#6B7280'}} dy={10} />
                     <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
                     <Bar dataKey="revenue" fill="#F3F4F6" radius={[4, 4, 0, 0]} barSize={32} className="dark:fill-gray-700" />
-                    <Bar dataKey="engagement" fill="#E45D3B" radius={[4, 4, 0, 0]} barSize={8} />
+                    <Bar dataKey="engagement" fill="#1BD1C9" radius={[4, 4, 0, 0]} barSize={8} />
                  </BarChart>
              </ResponsiveContainer>
           </div>

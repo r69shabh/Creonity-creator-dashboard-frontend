@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
-import { NAV_ITEMS, DRIVE_FOLDERS, USER_AVATAR } from '../types';
+import { NAV_ITEMS, DRIVE_FOLDERS, USER_AVATAR, BRAND_LOGO } from '../types';
 
 interface SidebarProps {
   mobileMenuOpen: boolean;
@@ -32,7 +32,6 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
     if (onLogout) {
       onLogout();
     } else {
-      // Fallback if not provided (shouldn't happen in updated app)
       navigate('/login');
     }
   };
@@ -55,9 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
     >
       <div className="p-6">
         <div className="flex items-center gap-3">
-          <div className="size-10 bg-gradient-to-tr from-primary to-orange-500 rounded-xl flex items-center justify-center text-white shadow-glow shrink-0">
-            <span className="material-symbols-outlined text-[24px]">hub</span>
-          </div>
+          <img src={BRAND_LOGO} alt="Creonity Logo" className="size-10 object-contain shrink-0" />
           <div>
             <span className="block text-lg font-display font-bold text-text-primary dark:text-white tracking-tight leading-none">Creonity</span>
             <span className="text-[10px] font-semibold text-text-secondary uppercase tracking-widest">Pro Dashboard</span>
@@ -67,11 +64,11 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
 
       <div className="px-4 mb-2">
         <div className="relative group">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors">
             <span className="material-symbols-outlined text-[20px]">search</span>
           </span>
           <input 
-            className="w-full h-10 pl-10 pr-10 rounded-xl bg-gray-50 dark:bg-gray-900 border-none ring-1 ring-gray-200 dark:ring-gray-700 text-sm text-text-primary dark:text-gray-200 placeholder-gray-400 focus:ring-2 focus:ring-primary/50 transition-all shadow-sm outline-none" 
+            className="w-full h-10 pl-10 pr-10 rounded-xl bg-gray-50 dark:bg-gray-900 border-none ring-1 ring-gray-200 dark:ring-gray-700 text-sm text-text-primary dark:text-gray-200 placeholder-gray-400 focus:ring-2 focus:ring-brand-blue/50 transition-all shadow-sm outline-none" 
             placeholder="Quick search..." 
             type="text" 
           />
@@ -90,16 +87,16 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
             className={({ isActive }) => `
               flex items-center justify-between px-4 py-2.5 rounded-xl font-medium transition-all group relative overflow-hidden
               ${isActive 
-                ? 'bg-primary/10 text-primary dark:text-white dark:bg-primary/20' 
+                ? 'bg-brand-blue/10 text-brand-blue dark:text-white dark:bg-brand-blue/20' 
                 : 'text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-primary dark:hover:text-white'
               }
             `}
           >
             {({ isActive }) => (
                 <>
-                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-r-full" />}
+                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-brand-blue rounded-r-full" />}
                     <div className="flex items-center gap-3 relative z-10">
-                    <span className={`material-symbols-outlined text-[22px] ${isActive ? 'text-primary' : 'group-hover:text-primary transition-colors'}`}>
+                    <span className={`material-symbols-outlined text-[22px] ${isActive ? 'text-brand-blue dark:text-white' : 'group-hover:text-brand-blue dark:group-hover:text-white transition-colors'}`}>
                         {item.icon}
                     </span>
                     <span className="font-display">{item.label}</span>
@@ -120,28 +117,28 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
             className={({ isActive }) => `
               flex items-center justify-between px-4 py-2.5 rounded-xl font-medium transition-all group relative overflow-hidden
               ${isActive 
-                ? 'bg-primary/10 text-primary dark:text-white dark:bg-primary/20' 
+                ? 'bg-brand-blue/10 text-brand-blue dark:text-white dark:bg-brand-blue/20' 
                 : 'text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-text-primary dark:hover:text-white'
               }
             `}
           >
             {({ isActive }) => (
                 <>
-                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-r-full" />}
+                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-brand-blue rounded-r-full" />}
                     <div className="flex items-center gap-3 relative z-10">
-                    <span className={`material-symbols-outlined text-[22px] ${isActive ? 'text-primary' : 'group-hover:text-primary transition-colors'}`}>
+                    <span className={`material-symbols-outlined text-[22px] ${isActive ? 'text-brand-blue dark:text-white' : 'group-hover:text-brand-blue dark:group-hover:text-white transition-colors'}`}>
                         chat
                     </span>
                     <span className="font-display">Messages</span>
                     </div>
-                    <span className="bg-primary text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-glow">3</span>
+                    <span className="bg-brand-teal text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold shadow-glow-teal">3</span>
                 </>
             )}
         </NavLink>
 
         <div className="mt-6 flex items-center justify-between px-4 py-2">
            <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Workspace</div>
-           <button onClick={handleAddFolder} className="p-1 text-gray-400 hover:text-primary hover:bg-primary/10 rounded transition-all">
+           <button onClick={handleAddFolder} className="p-1 text-gray-400 hover:text-brand-blue hover:bg-brand-blue/10 rounded transition-all">
              <span className="material-symbols-outlined text-[16px] block">add</span>
            </button>
         </div>
@@ -178,7 +175,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
             style={{ backgroundImage: `url("${USER_AVATAR}")` }}
           ></div>
           <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-sm font-bold text-text-primary dark:text-white truncate leading-tight group-hover:text-primary transition-colors">{user.firstName} {user.lastName}</span>
+            <span className="text-sm font-bold text-text-primary dark:text-white truncate leading-tight group-hover:text-brand-blue transition-colors">{user.firstName} {user.lastName}</span>
             <span className="text-xs text-text-secondary dark:text-gray-400 truncate">Pro Plan</span>
           </div>
           

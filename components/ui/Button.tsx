@@ -19,7 +19,8 @@ const Button: React.FC<ButtonProps> = ({
   const baseStyles = "inline-flex items-center justify-center font-display font-bold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]";
   
   const variants = {
-    primary: "bg-gradient-to-br from-primary to-orange-600 text-white hover:shadow-glow hover:shadow-primary/30 shadow-md border border-transparent",
+    // Updated gradient: Brand Blue (#075CD1) -> Accent Teal (#1BD1C9)
+    primary: "bg-gradient-to-r from-[#075CD1] to-[#1BD1C9] text-white hover:shadow-glow-teal hover:shadow-brand-teal/30 shadow-md border border-transparent",
     secondary: "bg-white text-text-primary border border-gray-200 hover:bg-gray-50 hover:border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700",
     outline: "border-2 border-gray-200 dark:border-gray-700 text-text-primary dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800",
     ghost: "text-text-secondary dark:text-gray-400 hover:text-primary dark:hover:text-white hover:bg-primary/5 dark:hover:bg-gray-800",

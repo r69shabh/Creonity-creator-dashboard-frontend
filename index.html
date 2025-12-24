@@ -12,8 +12,10 @@
     <style type="text/tailwindcss">
         @layer base {
             :root {
-                /* Default Primary: #E45D3B (Orange) converted to RGB channels */
-                --color-primary: 228 93 59;
+                /* Primary Brand Blue: #075CD1 (7, 92, 209) */
+                --color-primary: 7 92 209;
+                /* Brand Teal: #1BD1C9 (27, 209, 201) */
+                --color-teal: 27 209 201;
             }
         }
         @layer utilities {
@@ -38,17 +40,30 @@
             theme: {
                 extend: {
                     colors: {
-                        // Dynamic primary color using CSS variable
+                        // Dynamic colors
                         "primary": "rgb(var(--color-primary) / <alpha-value>)", 
-                        "primary-hover": "rgb(var(--color-primary) / 0.9)", // slightly transparent as hover approximation
+                        "primary-hover": "rgb(var(--color-primary) / 0.9)", 
+                        "brand-teal": "rgb(var(--color-teal) / <alpha-value>)",
+                        
+                        // New Brand Palette
+                        "brand-navy": "#000563",
+                        "brand-blue": "#075CD1",
+                        "brand-dark": "#020228",
+                        "brand-deep": "#021D95",
+                        
+                        // Tertiary / Accent Colors
+                        "accent-teal": "#1BD1C9",
+                        "accent-teal-dark": "#036964",
+                        "accent-teal-deep": "#00332E",
+
                         "sidebar-bg": "#F9FAFB",
                         "background-light": "#FAFAFA",
                         "border-color": "#E5E7EB",
                         "text-primary": "#111827",
                         "text-secondary": "#6B7280",
                         "message-incoming": "#F3F4F6",
-                        "message-outgoing": "#FFF1EE",
-                        // Preserved Custom Neutral Gray Palette for Dark Mode
+                        "message-outgoing": "#EEF6FF",
+                        
                         gray: {
                             50: '#FAFAFA',
                             100: '#F5F5F5',
@@ -73,6 +88,7 @@
                         "card-hover": "0 10px 30px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.03)",
                         "float": "0 10px 40px -10px rgba(0, 0, 0, 0.15)",
                         "glow": "0 0 20px rgb(var(--color-primary) / 0.15)",
+                        "glow-teal": "0 0 20px rgb(var(--color-teal) / 0.2)",
                     }
                 },
             },
@@ -92,7 +108,7 @@
 }
 </script>
 </head>
-<body class="bg-background-light dark:bg-gray-900 text-text-primary font-body antialiased overflow-hidden selection:bg-primary/20 selection:text-primary">
+<body class="bg-background-light dark:bg-gray-900 text-text-primary font-body antialiased overflow-hidden selection:bg-accent-teal/20 selection:text-brand-navy">
     <div id="root"></div>
     <script type="module" src="./index.tsx"></script>
 </body>

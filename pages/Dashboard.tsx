@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
         </div>
         <div className="flex items-center gap-3">
             <div className="px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-xs font-bold text-text-secondary dark:text-gray-400 shadow-sm flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span className="w-2 h-2 rounded-full bg-accent-teal animate-pulse"></span>
                 Updated just now
             </div>
         </div>
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
           <Link to="/collaborations" id="dash-stat-active">
             <Card hoverable className="h-full flex flex-col justify-between group">
               <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl text-blue-600 bg-blue-50 dark:bg-blue-900/20 transition-colors">
+                  <div className="p-3 rounded-xl text-brand-blue bg-blue-50 dark:bg-brand-blue/20 transition-colors">
                       <span className="material-symbols-outlined text-[24px]">handshake</span>
                   </div>
                   <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
                   </span>
               </div>
               <div>
-                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">3</p>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-brand-blue transition-colors">3</p>
                   <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Active Jobs</p>
                   <p className="text-xs text-gray-400 mt-2">View Workroom</p>
               </div>
@@ -125,7 +125,7 @@ const Dashboard: React.FC = () => {
                   </span>
               </div>
               <div>
-                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">$4,250</p>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-brand-blue transition-colors">$4,250</p>
                   <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Earnings (Mo)</p>
                   <p className="text-xs text-gray-400 mt-2">vs last month</p>
               </div>
@@ -144,7 +144,7 @@ const Dashboard: React.FC = () => {
                   </span>
               </div>
               <div>
-                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">12</p>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-brand-blue transition-colors">12</p>
                   <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Applications</p>
                   <p className="text-xs text-gray-400 mt-2">Pending Review</p>
               </div>
@@ -154,7 +154,7 @@ const Dashboard: React.FC = () => {
           <Link to="/analytics">
             <Card hoverable className="h-full flex flex-col justify-between group">
               <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-xl text-orange-600 bg-orange-50 dark:bg-orange-900/20 transition-colors">
+                  <div className="p-3 rounded-xl text-accent-teal-dark bg-[#1BD1C9]/20 dark:bg-[#036964]/30 transition-colors">
                       <span className="material-symbols-outlined text-[24px]">visibility</span>
                   </div>
                   <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
@@ -163,7 +163,7 @@ const Dashboard: React.FC = () => {
                   </span>
               </div>
               <div>
-                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">1.2k</p>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-brand-blue transition-colors">1.2k</p>
                   <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Profile Views</p>
                   <p className="text-xs text-gray-400 mt-2">last 7 days</p>
               </div>
@@ -181,7 +181,7 @@ const Dashboard: React.FC = () => {
                             <h3 className="text-lg font-bold text-text-primary dark:text-white">Earnings Trend</h3>
                             <p className="text-sm text-text-secondary dark:text-gray-400">Net revenue over time</p>
                         </div>
-                        <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-primary/50 text-text-primary dark:text-white">
+                        <select className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 text-text-primary dark:text-white">
                             <option>This Year</option>
                             <option>Last Year</option>
                         </select>
@@ -191,8 +191,8 @@ const Dashboard: React.FC = () => {
                         <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                             <defs>
                             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#E45D3B" stopOpacity={0.15}/>
-                                <stop offset="95%" stopColor="#E45D3B" stopOpacity={0}/>
+                                <stop offset="5%" stopColor="#1BD1C9" stopOpacity={0.15}/>
+                                <stop offset="95%" stopColor="#1BD1C9" stopOpacity={0}/>
                             </linearGradient>
                             </defs>
                             <XAxis 
@@ -204,12 +204,12 @@ const Dashboard: React.FC = () => {
                             />
                             <Tooltip 
                                 contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.15)', backgroundColor: 'rgba(255, 255, 255, 0.9)', padding: '12px' }}
-                                cursor={{ stroke: '#E45D3B', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                cursor={{ stroke: '#1BD1C9', strokeWidth: 1, strokeDasharray: '4 4' }}
                             />
                             <Area 
                                 type="monotone" 
                                 dataKey="value" 
-                                stroke="#E45D3B" 
+                                stroke="#1BD1C9" 
                                 strokeWidth={3} 
                                 fillOpacity={1} 
                                 fill="url(#colorValue)" 
@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
         <Card id="dash-reco" className="flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-text-primary dark:text-white">Recommended</h3>
-                <Link to="/gigs" className="text-xs font-bold text-primary hover:underline">View All</Link>
+                <Link to="/gigs" className="text-xs font-bold text-brand-blue hover:underline">View All</Link>
             </div>
             <div className="flex-1 flex flex-col gap-3">
                 {[
@@ -238,7 +238,7 @@ const Dashboard: React.FC = () => {
                             <img src={item.img} alt={item.brand} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h4 className="font-bold text-sm text-text-primary dark:text-white group-hover:text-primary transition-colors truncate">{item.title}</h4>
+                            <h4 className="font-bold text-sm text-text-primary dark:text-white group-hover:text-brand-blue transition-colors truncate">{item.title}</h4>
                             <div className="flex items-center gap-2 mt-1">
                                 <span className="text-xs text-text-secondary dark:text-gray-400">{item.brand}</span>
                                 <span className="w-1 h-1 rounded-full bg-gray-300"></span>

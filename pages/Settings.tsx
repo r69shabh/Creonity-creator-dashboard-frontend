@@ -4,8 +4,6 @@ import { useToast } from '../context/ToastContext';
 interface SettingsProps {
   darkMode?: boolean;
   toggleTheme?: () => void;
-  accentColor?: string;
-  setAccentColor?: (color: string) => void;
 }
 
 interface AppSettings {
@@ -41,16 +39,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   }
 };
 
-const PRESET_COLORS = [
-  { name: 'Sunset Orange', hex: '#E45D3B' },
-  { name: 'Ocean Blue', hex: '#3B82F6' },
-  { name: 'Royal Purple', hex: '#8B5CF6' },
-  { name: 'Emerald Green', hex: '#10B981' },
-  { name: 'Rose Pink', hex: '#EC4899' },
-  { name: 'Golden Amber', hex: '#F59E0B' },
-];
-
-const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme, accentColor, setAccentColor }) => {
+const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme }) => {
   const { addToast } = useToast();
   
   // Initialize state from local storage
@@ -104,13 +93,6 @@ const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme, accentColor,
         [field]: value
       }
     }));
-  };
-
-  const handleColorChange = (hex: string) => {
-    if (setAccentColor) {
-      setAccentColor(hex);
-      addToast('Accent color updated', 'success');
-    }
   };
 
   return (
@@ -183,28 +165,6 @@ const Settings: React.FC<SettingsProps> = ({ darkMode, toggleTheme, accentColor,
               >
                  <div className={`size-6 bg-white rounded-full shadow-sm transition-transform duration-200 ease-in-out ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
               </button>
-           </div>
-
-           <hr className="border-border-color dark:border-gray-700" />
-
-           {/* Accent Color Picker */}
-           <div>
-              <h3 className="font-semibold text-text-primary dark:text-white mb-4">Accent Color</h3>
-              <div className="flex flex-wrap gap-4">
-                {PRESET_COLORS.map((color) => (
-                  <button
-                    key={color.name}
-                    onClick={() => handleColorChange(color.hex)}
-                    className="group relative size-10 rounded-full flex items-center justify-center transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-                    style={{ backgroundColor: color.hex, '--tw-ring-color': color.hex } as React.CSSProperties}
-                    title={color.name}
-                  >
-                    {accentColor === color.hex && (
-                      <span className="material-symbols-outlined text-white text-[20px] drop-shadow-sm">check</span>
-                    )}
-                  </button>
-                ))}
-              </div>
            </div>
         </div>
       </section>

@@ -24,7 +24,7 @@ const Auctions: React.FC = () => {
             className={`${activeTab === 'active' ? 'border-primary text-primary' : 'border-transparent text-text-secondary dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-text-primary dark:hover:text-gray-200'} whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer bg-transparent focus:outline-none transition-colors`}
           >
             Active Gigs
-            <span className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${activeTab === 'active' ? 'bg-orange-100 dark:bg-orange-900/30 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-400'}`}>3</span>
+            <span className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${activeTab === 'active' ? 'bg-blue-100 dark:bg-blue-900/30 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-400'}`}>3</span>
           </button>
           <button 
             onClick={() => setActiveTab('won')}
@@ -77,7 +77,7 @@ const Auctions: React.FC = () => {
                 </div>
                 <div className="lg:col-span-2">
                   <p className="text-xs text-text-secondary dark:text-gray-400 lg:hidden mb-1">Time Left</p>
-                  <div className="flex items-center gap-1.5 text-orange-600 font-medium text-sm">
+                  <div className="flex items-center gap-1.5 text-accent-teal-dark dark:text-accent-teal font-medium text-sm">
                     <span className="material-symbols-outlined text-[16px]">timer</span>
                     02h:15m
                   </div>
@@ -133,7 +133,7 @@ const Auctions: React.FC = () => {
                   </span>
                 </div>
                 <div className="lg:col-span-2 flex justify-start lg:justify-end gap-2 mt-2 lg:mt-0">
-                  <button onClick={(e) => openBidModal(e, 'Morning Routine Integration')} className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary-hover shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center gap-1 z-10 relative">
+                  <button onClick={(e) => openBidModal(e, 'Morning Routine Integration')} className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary-hover shadow-md shadow-brand-blue/20 dark:shadow-none transition-colors flex items-center gap-1 z-10 relative">
                     <span className="material-symbols-outlined text-[16px]">arrow_upward</span>
                     Increase
                   </button>

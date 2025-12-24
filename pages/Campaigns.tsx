@@ -35,7 +35,7 @@ const Campaigns: React.FC = () => {
             className={`${activeTab === 'active' ? 'border-primary text-primary' : 'border-transparent text-text-secondary dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600 hover:text-text-primary dark:hover:text-gray-200'} whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer bg-transparent focus:outline-none transition-colors shrink-0`}
           >
             Active
-            <span className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${activeTab === 'active' ? 'bg-orange-100 dark:bg-orange-900/30 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-400'}`}>3</span>
+            <span className={`ml-2 rounded-full px-2.5 py-0.5 text-xs font-medium ${activeTab === 'active' ? 'bg-blue-100 dark:bg-blue-900/30 text-primary' : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-400'}`}>3</span>
           </button>
           <button 
             onClick={() => setActiveTab('commissioned')}
@@ -84,7 +84,7 @@ const Campaigns: React.FC = () => {
                 </div>
                 <div className="lg:col-span-2">
                   <p className="text-xs text-text-secondary dark:text-gray-400 lg:hidden mb-1">Ends In</p>
-                  <div className="flex items-center gap-1.5 text-orange-600 font-medium text-sm">
+                  <div className="flex items-center gap-1.5 text-accent-teal-dark dark:text-accent-teal font-medium text-sm">
                     <span className="material-symbols-outlined text-[16px]">timer</span>
                     02h:15m
                   </div>
@@ -134,7 +134,7 @@ const Campaigns: React.FC = () => {
                   </span>
                 </div>
                 <div className="lg:col-span-2 flex justify-start lg:justify-end gap-2 mt-2 lg:mt-0">
-                  <button onClick={(e) => openProposalModal(e, 'Morning Routine Integration')} className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary-hover shadow-md shadow-orange-100 dark:shadow-none transition-colors flex items-center gap-1 z-10 relative">
+                  <button onClick={(e) => openProposalModal(e, 'Morning Routine Integration')} className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-lg hover:bg-primary-hover shadow-md shadow-brand-blue/20 dark:shadow-none transition-colors flex items-center gap-1 z-10 relative">
                     <span className="material-symbols-outlined text-[16px]">gavel</span>
                     Bid Now
                   </button>
@@ -257,7 +257,7 @@ const Campaigns: React.FC = () => {
                             <label className="block text-xs font-bold text-text-primary dark:text-gray-300 uppercase tracking-wide mb-1.5">Pitch / Cover Letter</label>
                             <textarea className="w-full px-4 py-3 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-gray-900 text-text-primary dark:text-white focus:ring-primary focus:border-primary resize-none h-32 text-sm" placeholder="Briefly explain why you're the best fit..."></textarea>
                         </div>
-                        <button onClick={handleSubmit} className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all">
+                        <button onClick={handleSubmit} className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover shadow-lg shadow-brand-blue/20 transition-all">
                             Send Proposal
                         </button>
                     </div>

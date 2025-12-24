@@ -99,7 +99,7 @@ const Collaborations: React.FC = () => {
                 </div>
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400 font-medium">
+                    <div className="flex items-center gap-1.5 text-accent-teal-dark dark:text-accent-teal font-medium">
                         <span className="material-symbols-outlined text-[16px]">calendar_clock</span>
                         <span>Due in 2 days</span>
                     </div>
@@ -118,7 +118,7 @@ const Collaborations: React.FC = () => {
                     <p className="text-xs text-text-secondary dark:text-gray-400">Food &amp; Drink</p>
                     </div>
                 </div>
-                <span className="px-2 py-1 bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 text-[10px] uppercase font-bold tracking-wider rounded-md border border-orange-100 dark:border-orange-800">Reviewing</span>
+                <span className="px-2 py-1 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 text-[10px] uppercase font-bold tracking-wider rounded-md border border-yellow-100 dark:border-yellow-800">Reviewing</span>
                 </div>
                 <h4 className="text-base font-bold text-text-primary dark:text-white mb-2">Healthy Snacking</h4>
                 <div className="space-y-2 mt-4">
@@ -127,7 +127,7 @@ const Collaborations: React.FC = () => {
                     <span className="text-green-600 dark:text-green-400">Waiting for approval</span>
                 </div>
                 <div className="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-1.5 overflow-hidden">
-                    <div className="bg-orange-400 h-1.5 rounded-full w-full"></div>
+                    <div className="bg-yellow-400 h-1.5 rounded-full w-full"></div>
                 </div>
                 </div>
             </Link>

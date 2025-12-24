@@ -59,7 +59,7 @@ const CampaignDetail: React.FC = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-t border-b border-border-color dark:border-gray-700 mb-6">
                         <div>
                             <p className="text-xs uppercase text-text-secondary dark:text-gray-500 font-bold tracking-wider mb-1">Time Left</p>
-                            <p className="text-lg font-bold text-orange-600 font-mono flex items-center gap-1">
+                            <p className="text-lg font-bold text-accent-teal-dark dark:text-accent-teal font-mono flex items-center gap-1">
                                 <span className="material-symbols-outlined text-[18px]">timer</span> {campaignData.timeLeft}
                             </p>
                         </div>
@@ -123,7 +123,7 @@ const CampaignDetail: React.FC = () => {
                             <option>7 Days</option>
                         </select>
                     </div>
-                    <button className="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
+                    <button className="w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-brand-blue/20 hover:bg-primary-hover transition-all flex items-center justify-center gap-2">
                         <span className="material-symbols-outlined text-[20px]">send</span>
                         Submit Proposal
                     </button>

@@ -70,7 +70,7 @@ const Wallet: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-start justify-between mb-4">
              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400">
+                <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
                    <span className="material-symbols-outlined">lock_clock</span>
                 </div>
                 <span className="text-sm font-medium text-text-secondary dark:text-gray-400">Pending (Escrow)</span>
@@ -85,12 +85,12 @@ const Wallet: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-start justify-between mb-4">
              <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400">
                    <span className="material-symbols-outlined">account_balance</span>
                 </div>
                 <span className="text-sm font-medium text-text-secondary dark:text-gray-400">Available Balance</span>
              </div>
-             <button id="wallet-withdraw-btn" onClick={() => setIsWithdrawOpen(true)} className="text-primary text-xs font-semibold hover:underline">Withdraw</button>
+             <button id="wallet-withdraw-btn" onClick={() => setIsWithdrawOpen(true)} className="text-brand-blue text-xs font-semibold hover:underline">Withdraw</button>
           </div>
           <div className="flex flex-col gap-1">
              <h2 className="text-3xl font-bold text-text-primary dark:text-white tracking-tight">$8,450.00</h2>
@@ -119,7 +119,8 @@ const Wallet: React.FC = () => {
            </div>
            <div className="divide-y divide-border-color dark:divide-gray-700 min-w-[800px]">
               {[
-                { title: "VR Headset Unboxing", brand: "TechFlow AI", status: "In Escrow", date: "Est. Nov 05, 2023", method: "Wire Transfer", amount: "$1,200.00", icon: "lock", statusClass: "bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-400 border-orange-100 dark:border-orange-900/30", logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaaFbQihFfy-F6e5rien4N3nqD2ZVjagkT3ggFv5wZ2ytBjVxB3e5Lkw-2gUBg_mOc4f5FYiQ0Oyh0IQd8HYm49V1abSGN9so7_FUIO7nIMJVa4dg2k954krxoVARfLWHqET9tWAIrvxZViGNb290HSv5nG2vATLeKmVbexOJ6UPbuv0eQg3kUXQYHoRCJAbwj8L8L7ye9IqMX-sHBm0ehaYkW-GV4TYQsbW4xkfa1C1bLafHNqlfawtpnEGQsoYzRnMwznSWulJ-r" },
+                // Updated styling for "In Escrow" to avoid orange
+                { title: "VR Headset Unboxing", brand: "TechFlow AI", status: "In Escrow", date: "Est. Nov 05, 2023", method: "Wire Transfer", amount: "$1,200.00", icon: "lock", statusClass: "bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-100 dark:border-blue-900/30", logo: "https://lh3.googleusercontent.com/aida-public/AB6AXuAaaFbQihFfy-F6e5rien4N3nqD2ZVjagkT3ggFv5wZ2ytBjVxB3e5Lkw-2gUBg_mOc4f5FYiQ0Oyh0IQd8HYm49V1abSGN9so7_FUIO7nIMJVa4dg2k954krxoVARfLWHqET9tWAIrvxZViGNb290HSv5nG2vATLeKmVbexOJ6UPbuv0eQg3kUXQYHoRCJAbwj8L8L7ye9IqMX-sHBm0ehaYkW-GV4TYQsbW4xkfa1C1bLafHNqlfawtpnEGQsoYzRnMwznSWulJ-r" },
                 { title: "Summer Flavor Drop", brand: "Fizz", status: "Released", date: "Oct 20, 2023", method: "PayPal", amount: "$3,500.00", icon: "check_circle", statusClass: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-100 dark:border-green-900/30", logoText: "FZ", logoBg: "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400" },
                 { title: "Retro Console Launch", brand: "GameStation", status: "Pending Approval", date: "Est. Nov 12, 2023", method: "Wire Transfer", amount: "$2,100.00", icon: "pending_actions", statusClass: "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-100 dark:border-yellow-900/30", logoText: "GS", logoBg: "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400" },
               ].map((tx, i) => (
@@ -156,7 +157,7 @@ const Wallet: React.FC = () => {
                    </div>
                    <div className="text-right font-bold text-text-primary dark:text-white">{tx.amount}</div>
                    <div className="text-right">
-                       <button className="p-2 text-text-secondary hover:text-primary transition-colors">
+                       <button className="p-2 text-text-secondary hover:text-brand-blue transition-colors">
                            <span className="material-symbols-outlined text-[20px]">download</span>
                        </button>
                    </div>
@@ -164,7 +165,6 @@ const Wallet: React.FC = () => {
               ))}
            </div>
         </div>
-      </section>
 
       {/* Withdraw Modal */}
       {isWithdrawOpen && (
@@ -184,17 +184,17 @@ const Wallet: React.FC = () => {
                       <label className="block text-xs font-bold text-text-primary dark:text-gray-300 uppercase tracking-wide mb-1.5">Amount</label>
                       <div className="relative mb-4">
                           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary dark:text-gray-500 font-bold">$</span>
-                          <input type="number" className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-gray-900 text-text-primary dark:text-white focus:ring-primary focus:border-primary font-bold" placeholder="0.00" />
-                          <button className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-primary bg-primary/10 px-2 py-1 rounded hover:bg-primary/20">MAX</button>
+                          <input type="number" className="w-full pl-8 pr-4 py-2.5 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-gray-900 text-text-primary dark:text-white focus:ring-brand-blue focus:border-brand-blue font-bold" placeholder="0.00" />
+                          <button className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold text-brand-blue bg-brand-blue/10 px-2 py-1 rounded hover:bg-brand-blue/20">MAX</button>
                       </div>
 
                       <label className="block text-xs font-bold text-text-primary dark:text-gray-300 uppercase tracking-wide mb-1.5">Destination</label>
-                      <select className="w-full px-3 py-2.5 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-gray-900 text-text-primary dark:text-white focus:ring-primary focus:border-primary text-sm mb-6">
+                      <select className="w-full px-3 py-2.5 rounded-lg border border-border-color dark:border-gray-700 bg-white dark:bg-gray-900 text-text-primary dark:text-white focus:ring-brand-blue focus:border-brand-blue text-sm mb-6">
                           <option>PayPal (alex***@gmail.com)</option>
                           <option>Bank Account (**** 4242)</option>
                       </select>
 
-                      <button onClick={() => setIsWithdrawOpen(false)} className="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary-hover shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                      <button onClick={() => setIsWithdrawOpen(false)} className="w-full py-3 bg-brand-blue text-white font-bold rounded-lg hover:bg-brand-deep shadow-lg shadow-brand-blue/20 transition-all flex items-center justify-center gap-2">
                           <span className="material-symbols-outlined text-[20px]">payments</span>
                           Process Withdrawal
                       </button>

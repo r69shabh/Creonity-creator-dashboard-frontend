@@ -121,7 +121,7 @@ const Messages: React.FC<{ onMenuClick: () => void }> = ({ onMenuClick }) => {
                     <span className="text-xs font-bold text-text-primary dark:text-white">You</span>
                     <span className="text-[10px] text-text-secondary dark:text-gray-500">09:42 AM</span>
                  </div>
-                 <div className="bg-message-outgoing dark:bg-primary/20 border border-orange-100 dark:border-primary/20 p-3 rounded-2xl rounded-tr-none shadow-sm text-sm text-text-primary dark:text-white leading-relaxed">
+                 <div className="bg-message-outgoing dark:bg-primary/20 border border-blue-100 dark:border-primary/20 p-3 rounded-2xl rounded-tr-none shadow-sm text-sm text-text-primary dark:text-white leading-relaxed">
                     Hey Sarah! Yes, just wrapping up the final edits. Uploading it right now for your approval.
                  </div>
               </div>
