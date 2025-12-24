@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { Link } from 'react-router-dom';
 import Card from '../components/ui/Card';
+import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
 
 const chartData = [
   { name: 'Jan', value: 200 },
@@ -14,11 +15,69 @@ const chartData = [
   { name: 'Aug', value: 800 },
 ];
 
+const TUTORIAL_STEPS: TutorialStep[] = [
+    {
+        targetId: 'dash-intro',
+        title: 'Welcome to Creonity',
+        content: 'This is your command center. Get a quick overview of your career performance, active jobs, and pending tasks.',
+        position: 'bottom'
+    },
+    {
+        targetId: 'dash-stat-earnings',
+        title: 'Track Your Finances',
+        content: 'Monitor your monthly earnings, escrow status, and withdrawn funds. Payments are released automatically upon milestone completion.',
+        position: 'bottom'
+    },
+    {
+        targetId: 'dash-stat-active',
+        title: 'Active Collaborations',
+        content: 'See your in-progress jobs at a glance. Click here to jump into your Workroom and upload deliverables.',
+        position: 'bottom'
+    },
+    {
+        targetId: 'dash-reco',
+        title: 'Smart Recommendations',
+        content: 'Our AI matches you with brands that fit your niche. Review these gigs daily to keep your pipeline full.',
+        position: 'left'
+    },
+    {
+        targetId: 'center-screen', // Special case handled in component
+        title: "You're Ready!",
+        content: "That's the basics. You can now explore the marketplace, update your portfolio, or start bidding on campaigns.",
+        position: 'bottom'
+    }
+];
+
 const Dashboard: React.FC = () => {
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    // Check if tutorial has been completed
+    const isCompleted = localStorage.getItem('creonity_dashboard_tutorial_completed');
+    if (!isCompleted) {
+       // Small delay to ensure layout is stable
+       const timer = setTimeout(() => setShowTutorial(true), 1000);
+       return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+      localStorage.setItem('creonity_dashboard_tutorial_completed', 'true');
+      setShowTutorial(false);
+  };
+
   return (
-    <div className="p-6 lg:p-8 max-w-[1600px] mx-auto flex flex-col gap-8">
+    <div className="p-6 lg:p-8 max-w-[1600px] mx-auto flex flex-col gap-8 relative">
+      
+      <TutorialOverlay 
+        isOpen={showTutorial} 
+        steps={TUTORIAL_STEPS}
+        onComplete={handleTutorialComplete}
+        onSkip={handleTutorialComplete}
+      />
+
       {/* Welcome Section */}
-      <div className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
+      <div id="dash-intro" className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4">
         <div>
             <h1 className="text-2xl md:text-3xl font-display font-bold text-text-primary dark:text-white">
                 Dashboard
@@ -35,31 +94,81 @@ const Dashboard: React.FC = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Active Jobs', value: '3', trend: 'In Progress', up: true, subtitle: 'View Workroom', link: '/collaborations', icon: 'handshake', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/20' },
-          { label: 'Earnings (Mo)', value: '$4,250', trend: '+12.5%', up: true, subtitle: 'vs last month', link: '/wallet', icon: 'payments', color: 'text-green-600 bg-green-50 dark:bg-green-900/20' },
-          { label: 'Applications', value: '12', trend: '2 New', up: true, subtitle: 'Pending Review', link: '/collaborations', icon: 'description', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/20' },
-          { label: 'Profile Views', value: '1.2k', trend: '+15%', up: true, subtitle: 'last 7 days', link: '/analytics', icon: 'visibility', color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20' },
-        ].map((stat, i) => (
-          <Link to={stat.link} key={i}>
+          
+          <Link to="/collaborations" id="dash-stat-active">
             <Card hoverable className="h-full flex flex-col justify-between group">
               <div className="flex justify-between items-start mb-4">
-                  <div className={`p-3 rounded-xl ${stat.color} transition-colors`}>
-                      <span className="material-symbols-outlined text-[24px]">{stat.icon}</span>
+                  <div className="p-3 rounded-xl text-blue-600 bg-blue-50 dark:bg-blue-900/20 transition-colors">
+                      <span className="material-symbols-outlined text-[24px]">handshake</span>
                   </div>
-                  <span className={`text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 ${stat.up ? 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-50 text-red-700'}`}>
-                    {stat.up && <span className="material-symbols-outlined text-[14px]">trending_up</span>}
-                    {stat.trend}
+                  <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    In Progress
                   </span>
               </div>
               <div>
-                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">{stat.value}</p>
-                  <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">{stat.label}</p>
-                  <p className="text-xs text-gray-400 mt-2">{stat.subtitle}</p>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">3</p>
+                  <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Active Jobs</p>
+                  <p className="text-xs text-gray-400 mt-2">View Workroom</p>
               </div>
             </Card>
           </Link>
-        ))}
+
+          <Link to="/wallet" id="dash-stat-earnings">
+            <Card hoverable className="h-full flex flex-col justify-between group">
+              <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl text-green-600 bg-green-50 dark:bg-green-900/20 transition-colors">
+                      <span className="material-symbols-outlined text-[24px]">payments</span>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                    +12.5%
+                  </span>
+              </div>
+              <div>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">$4,250</p>
+                  <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Earnings (Mo)</p>
+                  <p className="text-xs text-gray-400 mt-2">vs last month</p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link to="/collaborations">
+            <Card hoverable className="h-full flex flex-col justify-between group">
+              <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl text-purple-600 bg-purple-50 dark:bg-purple-900/20 transition-colors">
+                      <span className="material-symbols-outlined text-[24px]">description</span>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                    2 New
+                  </span>
+              </div>
+              <div>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">12</p>
+                  <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Applications</p>
+                  <p className="text-xs text-gray-400 mt-2">Pending Review</p>
+              </div>
+            </Card>
+          </Link>
+
+          <Link to="/analytics">
+            <Card hoverable className="h-full flex flex-col justify-between group">
+              <div className="flex justify-between items-start mb-4">
+                  <div className="p-3 rounded-xl text-orange-600 bg-orange-50 dark:bg-orange-900/20 transition-colors">
+                      <span className="material-symbols-outlined text-[24px]">visibility</span>
+                  </div>
+                  <span className="text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                    <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                    +15%
+                  </span>
+              </div>
+              <div>
+                  <p className="text-3xl font-display font-bold text-text-primary dark:text-white tracking-tight group-hover:text-primary transition-colors">1.2k</p>
+                  <p className="text-sm text-text-secondary dark:text-gray-400 font-medium mt-1">Profile Views</p>
+                  <p className="text-xs text-gray-400 mt-2">last 7 days</p>
+              </div>
+            </Card>
+          </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -113,7 +222,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Recommended for you */}
-        <Card className="flex flex-col">
+        <Card id="dash-reco" className="flex flex-col">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-text-primary dark:text-white">Recommended</h3>
                 <Link to="/gigs" className="text-xs font-bold text-primary hover:underline">View All</Link>

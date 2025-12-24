@@ -1,14 +1,37 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { OPPORTUNITIES } from '../data/mockData';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
 import Avatar from '../components/ui/Avatar';
+import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
+
+const GIGS_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    targetId: 'gigs-header',
+    title: 'Marketplace',
+    content: 'Explore available campaigns from top brands matching your niche. Use keywords to search.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'gigs-filters',
+    title: 'Smart Filters',
+    content: 'Narrow down opportunities by platform, category, or budget to find your perfect fit.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'gigs-grid', 
+    title: 'Opportunity Cards',
+    content: 'Each card shows budget, deadlines, and requirements. Click to view full details and apply.',
+    position: 'top'
+  }
+];
 
 const Gigs: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeFilterDropdown, setActiveFilterDropdown] = useState<string | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
   
   // Filter States
   const [filters, setFilters] = useState({
@@ -17,6 +40,19 @@ const Gigs: React.FC = () => {
     contentType: [] as string[],
     budget: 0, 
   });
+
+  useEffect(() => {
+    const isCompleted = localStorage.getItem('creonity_gigs_tutorial_completed');
+    if (!isCompleted) {
+       const timer = setTimeout(() => setShowTutorial(true), 800);
+       return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+      localStorage.setItem('creonity_gigs_tutorial_completed', 'true');
+      setShowTutorial(false);
+  };
 
   const toggleFilter = (type: keyof typeof filters, value: string) => {
     setFilters(prev => {
@@ -70,15 +106,22 @@ const Gigs: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-full max-w-[1800px] mx-auto p-6 lg:p-8 overflow-hidden">
+    <div className="flex flex-col h-full max-w-[1800px] mx-auto p-6 lg:p-8 overflow-hidden relative">
+         <TutorialOverlay 
+            isOpen={showTutorial} 
+            steps={GIGS_TUTORIAL_STEPS}
+            onComplete={handleTutorialComplete}
+            onSkip={handleTutorialComplete}
+         />
+
          {/* Header */}
-         <div className="mb-8 shrink-0">
+         <div id="gigs-header" className="mb-8 shrink-0">
              <h1 className="text-3xl font-display font-bold text-text-primary dark:text-white mb-2">Find Opportunities</h1>
              <p className="text-text-secondary dark:text-gray-400">Discover campaigns that match your unique style and audience.</p>
          </div>
 
          {/* Search & Filters */}
-         <div className="flex flex-col xl:flex-row gap-4 mb-8 shrink-0 z-20">
+         <div id="gigs-filters" className="flex flex-col xl:flex-row gap-4 mb-8 shrink-0 z-20">
              <div className="relative flex-1">
                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                      <span className="material-symbols-outlined">search</span>
@@ -157,7 +200,7 @@ const Gigs: React.FC = () => {
          </div>
 
          {/* Grid */}
-         <div className="flex-1 overflow-y-auto pr-2 pb-10">
+         <div id="gigs-grid" className="flex-1 overflow-y-auto pr-2 pb-10">
              {opportunities.length > 0 ? (
                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                     {opportunities.map((item) => (

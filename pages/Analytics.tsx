@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
 
 const earningsData = [
   { name: 'Jan', value: 25 }, { name: 'Feb', value: 30 }, { name: 'Mar', value: 45 },
@@ -17,6 +18,27 @@ const engagementData = [
   { name: 'W6', revenue: 3200, engagement: 85 }
 ];
 
+const ANALYTICS_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    targetId: 'analytics-kpi',
+    title: 'Key Performance Indicators',
+    content: 'Instant view of your total earnings, average engagement rates, and audience growth.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'analytics-main-chart',
+    title: 'Revenue Trends',
+    content: 'Visualize your income over time. Switch between Year and Month views to identify peak seasons.',
+    position: 'top'
+  },
+   {
+    targetId: 'analytics-platform',
+    title: 'Platform Mix',
+    content: 'See which platforms (YouTube, Instagram, etc.) are driving the most value for your business.',
+    position: 'left'
+  }
+];
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
@@ -32,9 +54,31 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const Analytics: React.FC = () => {
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    const isCompleted = localStorage.getItem('creonity_analytics_tutorial_completed');
+    if (!isCompleted) {
+       const timer = setTimeout(() => setShowTutorial(true), 800);
+       return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+      localStorage.setItem('creonity_analytics_tutorial_completed', 'true');
+      setShowTutorial(false);
+  };
+
   return (
-    <div className="max-w-[1600px] mx-auto flex flex-col gap-6 p-6">
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="max-w-[1600px] mx-auto flex flex-col gap-6 p-6 relative">
+       <TutorialOverlay 
+         isOpen={showTutorial} 
+         steps={ANALYTICS_TUTORIAL_STEPS}
+         onComplete={handleTutorialComplete}
+         onSkip={handleTutorialComplete}
+       />
+
+       <div id="analytics-kpi" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
          {[
            { label: "Total Earnings", value: "$28,450", icon: "payments", color: "green", change: "+14.2%" },
            { label: "Avg. Engagement", value: "8.4%", icon: "favorite", color: "red", change: "+0.5%" },
@@ -63,7 +107,7 @@ const Analytics: React.FC = () => {
        </div>
 
        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card">
+          <div id="analytics-main-chart" className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card">
              <div className="flex justify-between items-center mb-6">
                 <div>
                    <h3 className="text-lg font-semibold text-text-primary dark:text-white">Earnings Over Time</h3>
@@ -91,7 +135,7 @@ const Analytics: React.FC = () => {
              </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card flex flex-col">
+          <div id="analytics-platform" className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card flex flex-col">
               <h3 className="text-lg font-semibold text-text-primary dark:text-white mb-6">Platform Performance</h3>
               <div className="flex-1 flex flex-col justify-center gap-8">
                  {[

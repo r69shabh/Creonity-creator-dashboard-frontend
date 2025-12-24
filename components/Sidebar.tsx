@@ -6,9 +6,10 @@ import { NAV_ITEMS, DRIVE_FOLDERS, USER_AVATAR } from '../types';
 interface SidebarProps {
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
+  onLogout?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, onLogout }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addToast } = useToast();
@@ -28,7 +29,12 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen }) 
   const handleLogout = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToast('Logged out successfully', 'success');
-    // In a real app, clear tokens/state here
+    if (onLogout) {
+      onLogout();
+    } else {
+      // Fallback if not provided (shouldn't happen in updated app)
+      navigate('/login');
+    }
   };
 
   const handleAddFolder = () => {

@@ -1,16 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
 
 type Tab = 'active' | 'applications' | 'completed';
 
+const COLLAB_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    targetId: 'collab-tabs',
+    title: 'Workroom Stages',
+    content: 'Navigate between your active jobs, pending applications, and completed contracts history.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'collab-content',
+    title: 'Manage Work',
+    content: 'Track progress bars, deadlines, and payment status for each collaboration here.',
+    position: 'top'
+  }
+];
+
 const Collaborations: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('active');
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    const isCompleted = localStorage.getItem('creonity_collab_tutorial_completed');
+    if (!isCompleted) {
+       const timer = setTimeout(() => setShowTutorial(true), 800);
+       return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+      localStorage.setItem('creonity_collab_tutorial_completed', 'true');
+      setShowTutorial(false);
+  };
 
   return (
-    <div className="max-w-[1200px] mx-auto h-full p-6 flex flex-col gap-6">
+    <div className="max-w-[1200px] mx-auto h-full p-6 flex flex-col gap-6 relative">
+      <TutorialOverlay 
+        isOpen={showTutorial} 
+        steps={COLLAB_TUTORIAL_STEPS}
+        onComplete={handleTutorialComplete}
+        onSkip={handleTutorialComplete}
+      />
       
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+      <div id="collab-tabs" className="border-b border-gray-200 dark:border-gray-700">
         <nav className="-mb-px flex space-x-8">
             <button 
                 onClick={() => setActiveTab('active')}
@@ -35,6 +71,7 @@ const Collaborations: React.FC = () => {
         </nav>
       </div>
 
+      <div id="collab-content">
       {/* Active Work View */}
       {activeTab === 'active' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -180,6 +217,7 @@ const Collaborations: React.FC = () => {
                 </div>
             </div>
        )}
+       </div>
 
     </div>
   );

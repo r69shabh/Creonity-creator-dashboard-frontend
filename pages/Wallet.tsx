@@ -1,12 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
+
+const WALLET_TUTORIAL_STEPS: TutorialStep[] = [
+  {
+    targetId: 'wallet-cards',
+    title: 'Financial Overview',
+    content: 'View total lifetime earnings, funds currently held in escrow, and your available withdrawable balance.',
+    position: 'bottom'
+  },
+  {
+    targetId: 'wallet-withdraw-btn',
+    title: 'Withdraw Funds',
+    content: 'Ready to cash out? Transfer your available balance to your connected bank account or PayPal instantly.',
+    position: 'left'
+  },
+  {
+    targetId: 'wallet-history',
+    title: 'Transaction History',
+    content: 'A complete ledger of every payment, escrow release, and withdrawal for your records.',
+    position: 'top'
+  }
+];
 
 const Wallet: React.FC = () => {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
+
+  useEffect(() => {
+    const isCompleted = localStorage.getItem('creonity_wallet_tutorial_completed');
+    if (!isCompleted) {
+       const timer = setTimeout(() => setShowTutorial(true), 800);
+       return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleTutorialComplete = () => {
+      localStorage.setItem('creonity_wallet_tutorial_completed', 'true');
+      setShowTutorial(false);
+  };
 
   return (
-    <div className="max-w-[1200px] mx-auto h-full flex flex-col gap-8 p-6">
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="max-w-[1200px] mx-auto h-full flex flex-col gap-8 p-6 relative">
+      <TutorialOverlay 
+        isOpen={showTutorial} 
+        steps={WALLET_TUTORIAL_STEPS}
+        onComplete={handleTutorialComplete}
+        onSkip={handleTutorialComplete}
+      />
+
+      <section id="wallet-cards" className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -47,7 +90,7 @@ const Wallet: React.FC = () => {
                 </div>
                 <span className="text-sm font-medium text-text-secondary dark:text-gray-400">Available Balance</span>
              </div>
-             <button onClick={() => setIsWithdrawOpen(true)} className="text-primary text-xs font-semibold hover:underline">Withdraw</button>
+             <button id="wallet-withdraw-btn" onClick={() => setIsWithdrawOpen(true)} className="text-primary text-xs font-semibold hover:underline">Withdraw</button>
           </div>
           <div className="flex flex-col gap-1">
              <h2 className="text-3xl font-bold text-text-primary dark:text-white tracking-tight">$8,450.00</h2>
@@ -56,7 +99,7 @@ const Wallet: React.FC = () => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4">
+      <section id="wallet-history" className="flex flex-col gap-4">
         <div className="flex items-center justify-between px-1">
            <h3 className="text-lg font-bold text-text-primary dark:text-white">Payment History &amp; Escrow Status</h3>
            <div className="flex items-center gap-2 bg-white dark:bg-gray-800 border border-border-color dark:border-gray-700 rounded-lg p-1">
