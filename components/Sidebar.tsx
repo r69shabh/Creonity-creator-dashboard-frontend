@@ -53,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen }) 
             <span className="material-symbols-outlined text-[24px]">hub</span>
           </div>
           <div>
-            <span className="block text-lg font-display font-bold text-text-primary dark:text-white tracking-tight leading-none">CreatorSpace</span>
+            <span className="block text-lg font-display font-bold text-text-primary dark:text-white tracking-tight leading-none">Creonity</span>
             <span className="text-[10px] font-semibold text-text-secondary uppercase tracking-widest">Pro Dashboard</span>
           </div>
         </div>
