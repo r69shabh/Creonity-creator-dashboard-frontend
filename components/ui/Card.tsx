@@ -7,7 +7,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const Card: React.FC<CardProps> = ({ children, className = '', padding = 'p-6', hoverable = false, ...props }) => {
   return (
-    <div 
+    <div
       className={`
         bg-white dark:bg-gray-800 
         rounded-2xl 
@@ -21,8 +21,6 @@ const Card: React.FC<CardProps> = ({ children, className = '', padding = 'p-6', 
       `}
       {...props}
     >
-      {/* Subtle top gradient for depth in light mode */}
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-gray-100 to-transparent dark:via-gray-700/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
       {children}
     </div>
   );

@@ -2,19 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { OPPORTUNITIES } from '../data/mockData';
 import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
 import Card from '../components/ui/Card';
-import Avatar from '../components/ui/Avatar';
 import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
-
-// Platform Logo Mapping
-const PLATFORM_LOGOS: Record<string, string> = {
-    Instagram: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg",
-    YouTube: "https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg",
-    TikTok: "https://www.svgrepo.com/show/303260/tiktok-logo-logo.svg",
-    Twitch: "https://www.svgrepo.com/show/512965/twitch-128.svg",
-    "UGC Only": "https://www.svgrepo.com/show/532386/camera-plus.svg" // Placeholder for UGC
-};
 
 const GIGS_TUTORIAL_STEPS: TutorialStep[] = [
     {
@@ -37,6 +26,28 @@ const GIGS_TUTORIAL_STEPS: TutorialStep[] = [
     }
 ];
 
+// Platform icons using Material Symbols for consistency
+const PLATFORM_ICONS: Record<string, { icon: string; color: string; bg: string }> = {
+    Instagram: { icon: 'photo_camera', color: 'text-pink-600', bg: 'bg-pink-50 dark:bg-pink-900/20' },
+    YouTube: { icon: 'smart_display', color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20' },
+    TikTok: { icon: 'music_note', color: 'text-gray-900 dark:text-white', bg: 'bg-gray-100 dark:bg-gray-700' },
+    Twitch: { icon: 'live_tv', color: 'text-purple-600', bg: 'bg-purple-50 dark:bg-purple-900/20' },
+    'UGC Only': { icon: 'videocam', color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' }
+};
+
+// Budget range options
+const BUDGET_OPTIONS = [
+    { label: 'Any Budget', min: 0, max: Infinity },
+    { label: 'Under $500', min: 0, max: 500 },
+    { label: '$500 - $1,000', min: 500, max: 1000 },
+    { label: '$1,000 - $2,500', min: 1000, max: 2500 },
+    { label: '$2,500 - $5,000', min: 2500, max: 5000 },
+    { label: '$5,000+', min: 5000, max: Infinity },
+];
+
+// Content type options  
+const CONTENT_TYPE_OPTIONS = ['Video', 'Story/Reel', 'Integration', 'Ambassador', 'UGC'];
+
 const Gigs: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilterDropdown, setActiveFilterDropdown] = useState<string | null>(null);
@@ -47,7 +58,7 @@ const Gigs: React.FC = () => {
         category: [] as string[],
         platform: [] as string[],
         contentType: [] as string[],
-        budget: 0,
+        budgetRange: { min: 0, max: Infinity },
     });
 
     useEffect(() => {
@@ -64,9 +75,9 @@ const Gigs: React.FC = () => {
         setShowTutorial(false);
     };
 
-    const toggleFilter = (type: keyof typeof filters, value: string) => {
+    const toggleFilter = (type: 'category' | 'platform' | 'contentType', value: string) => {
         setFilters(prev => {
-            const current = prev[type] as string[];
+            const current = prev[type];
             const updated = current.includes(value)
                 ? current.filter(item => item !== value)
                 : [...current, value];
@@ -82,10 +93,10 @@ const Gigs: React.FC = () => {
 
             const matchesCategory = filters.category.length === 0 || filters.category.some(c => gig.category.includes(c));
             const matchesPlatform = filters.platform.length === 0 || filters.platform.some(p => gig.platform.includes(p));
-            // Simple budget check
-            const matchesBudget = filters.budget === 0 || gig.budgetMax >= filters.budget;
+            const matchesContentType = filters.contentType.length === 0 || filters.contentType.some(t => gig.type.includes(t));
+            const matchesBudget = gig.budgetMax >= filters.budgetRange.min && gig.budgetMin <= filters.budgetRange.max;
 
-            return matchesSearch && matchesCategory && matchesPlatform && matchesBudget;
+            return matchesSearch && matchesCategory && matchesPlatform && matchesContentType && matchesBudget;
         });
     }, [searchTerm, filters]);
 
@@ -93,21 +104,39 @@ const Gigs: React.FC = () => {
         setActiveFilterDropdown(activeFilterDropdown === name ? null : name);
     };
 
+    const getActiveFilterCount = () => {
+        let count = 0;
+        if (filters.category.length > 0) count++;
+        if (filters.platform.length > 0) count++;
+        if (filters.contentType.length > 0) count++;
+        if (filters.budgetRange.min > 0 || filters.budgetRange.max < Infinity) count++;
+        return count;
+    };
+
+    const clearAllFilters = () => {
+        setFilters({ category: [], platform: [], contentType: [], budgetRange: { min: 0, max: Infinity } });
+        setSearchTerm('');
+    };
+
     const FilterButton: React.FC<{ label: string; name: string; count?: number; children?: React.ReactNode }> = ({ label, name, count, children }) => (
         <div className="relative">
             <button
                 onClick={() => toggleDropdown(name)}
-                className={`px-4 py-2 rounded-full border text-sm font-bold flex items-center gap-2 transition-all active:scale-95 ${activeFilterDropdown === name || (count && count > 0) ? 'bg-primary text-white border-primary shadow-md shadow-primary/20' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-text-secondary dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'}`}
+                className={`h-10 px-4 rounded-lg border text-sm font-medium flex items-center gap-2 transition-all ${activeFilterDropdown === name || (count && count > 0)
+                    ? 'bg-primary/10 text-primary border-primary/30 dark:bg-primary/20'
+                    : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-text-secondary dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'}`}
             >
                 {label}
-                {count && count > 0 && <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded-full">{count}</span>}
+                {count !== undefined && count > 0 && (
+                    <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center">{count}</span>
+                )}
                 <span className={`material-symbols-outlined text-[18px] transition-transform ${activeFilterDropdown === name ? 'rotate-180' : ''}`}>expand_more</span>
             </button>
 
             {activeFilterDropdown === name && (
                 <>
                     <div className="fixed inset-0 z-10" onClick={() => setActiveFilterDropdown(null)}></div>
-                    <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-2xl shadow-float border border-gray-200 dark:border-gray-700 p-4 z-20 animate-in fade-in zoom-in-95 duration-100 ring-1 ring-black/5">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-float border border-gray-200 dark:border-gray-700 p-3 z-20 animate-in fade-in zoom-in-95 duration-100">
                         {children}
                     </div>
                 </>
@@ -116,7 +145,7 @@ const Gigs: React.FC = () => {
     );
 
     return (
-        <div className="flex flex-col h-full max-w-[1800px] mx-auto p-6 lg:p-8 overflow-hidden relative">
+        <div className="flex flex-col h-full max-w-[1600px] mx-auto p-6 lg:p-8 overflow-hidden relative">
             <TutorialOverlay
                 isOpen={showTutorial}
                 steps={GIGS_TUTORIAL_STEPS}
@@ -125,131 +154,175 @@ const Gigs: React.FC = () => {
             />
 
             {/* Header */}
-            <div id="gigs-header" className="mb-8 shrink-0">
-                <h1 className="text-3xl font-display font-bold text-text-primary dark:text-white mb-2">Find Opportunities</h1>
-                <p className="text-text-secondary dark:text-gray-400">Discover campaigns that match your unique style and audience.</p>
+            <div id="gigs-header" className="mb-6 shrink-0">
+                <h1 className="text-2xl md:text-3xl font-display font-bold text-text-primary dark:text-white mb-1">Find Opportunities</h1>
+                <p className="text-sm text-text-secondary dark:text-gray-400">Discover campaigns that match your unique style and audience.</p>
             </div>
 
             {/* Search & Filters */}
-            <div id="gigs-filters" className="flex flex-col xl:flex-row gap-4 mb-8 shrink-0 z-20">
-                <div className="relative flex-1">
+            <div id="gigs-filters" className="flex flex-col gap-4 mb-6 shrink-0 z-20">
+                <div className="relative max-w-2xl">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                        <span className="material-symbols-outlined">search</span>
+                        <span className="material-symbols-outlined text-[20px]">search</span>
                     </span>
                     <input
                         type="text"
                         placeholder="Search by brand, keyword, or vibe..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-12 pl-12 pr-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary shadow-sm transition-all outline-none text-sm font-medium placeholder-gray-400"
+                        className="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm placeholder-gray-400"
                     />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-2">
                     <FilterButton label="Category" name="category" count={filters.category.length}>
-                        <div className="space-y-1">
-                            {['Tech', 'Lifestyle', 'Gaming', 'Fashion', 'Health & Fitness', 'Travel'].map(opt => (
-                                <label key={opt} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                        <div className="space-y-0.5 max-h-64 overflow-y-auto">
+                            {['Tech', 'Lifestyle', 'Gaming', 'Fashion', 'Food & Drink', 'Health & Fitness', 'Travel', 'Beauty', 'Finance', 'Education'].map(opt => (
+                                <label key={opt} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
                                     <input
                                         type="checkbox"
                                         checked={filters.category.includes(opt)}
                                         onChange={() => toggleFilter('category', opt)}
                                         className="rounded text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4"
                                     />
-                                    <span className="text-sm font-medium text-text-primary dark:text-gray-200">{opt}</span>
+                                    <span className="text-sm text-text-primary dark:text-gray-200">{opt}</span>
                                 </label>
                             ))}
                         </div>
                     </FilterButton>
 
                     <FilterButton label="Platform" name="platform" count={filters.platform.length}>
-                        <div className="space-y-1">
-                            {['Instagram', 'YouTube', 'TikTok', 'Twitch', 'UGC Only'].map(opt => (
-                                <label key={opt} className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                        <div className="space-y-0.5">
+                            {Object.entries(PLATFORM_ICONS).map(([platform, style]) => (
+                                <label key={platform} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
                                     <input
                                         type="checkbox"
-                                        checked={filters.platform.includes(opt)}
-                                        onChange={() => toggleFilter('platform', opt)}
+                                        checked={filters.platform.includes(platform)}
+                                        onChange={() => toggleFilter('platform', platform)}
                                         className="rounded text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4"
                                     />
-                                    <span className="text-sm font-medium text-text-primary dark:text-gray-200">{opt}</span>
+                                    <div className={`size-6 rounded-md ${style.bg} ${style.color} flex items-center justify-center`}>
+                                        <span className="material-symbols-outlined text-[14px]">{style.icon}</span>
+                                    </div>
+                                    <span className="text-sm text-text-primary dark:text-gray-200">{platform}</span>
                                 </label>
                             ))}
                         </div>
                     </FilterButton>
 
-                    <FilterButton label="Budget" name="budget">
-                        <div className="px-2 py-2">
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-xs font-bold text-text-secondary uppercase">Min Budget</span>
-                                <span className="text-sm font-bold text-primary">${filters.budget}</span>
-                            </div>
-                            <input
-                                type="range"
-                                min="0" max="5000" step="100"
-                                value={filters.budget}
-                                onChange={(e) => setFilters({ ...filters, budget: parseInt(e.target.value) })}
-                                className="w-full accent-primary h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                            />
-                            <div className="flex justify-between text-[10px] text-gray-400 mt-2 font-bold">
-                                <span>$0</span>
-                                <span>$5k+</span>
-                            </div>
+                    <FilterButton label="Content Type" name="contentType" count={filters.contentType.length}>
+                        <div className="space-y-0.5">
+                            {CONTENT_TYPE_OPTIONS.map(opt => (
+                                <label key={opt} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                                    <input
+                                        type="checkbox"
+                                        checked={filters.contentType.includes(opt)}
+                                        onChange={() => toggleFilter('contentType', opt)}
+                                        className="rounded text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4"
+                                    />
+                                    <span className="text-sm text-text-primary dark:text-gray-200">{opt}</span>
+                                </label>
+                            ))}
                         </div>
                     </FilterButton>
 
-                    {(filters.category.length > 0 || filters.platform.length > 0 || filters.budget > 0) && (
+                    <FilterButton label="Budget" name="budget" count={filters.budgetRange.min > 0 || filters.budgetRange.max < Infinity ? 1 : 0}>
+                        <div className="space-y-0.5">
+                            {BUDGET_OPTIONS.map(opt => (
+                                <label key={opt.label} className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors">
+                                    <input
+                                        type="radio"
+                                        name="budget"
+                                        checked={filters.budgetRange.min === opt.min && filters.budgetRange.max === opt.max}
+                                        onChange={() => setFilters({ ...filters, budgetRange: { min: opt.min, max: opt.max } })}
+                                        className="text-primary focus:ring-primary border-gray-300 dark:border-gray-600 dark:bg-gray-700 w-4 h-4"
+                                    />
+                                    <span className="text-sm text-text-primary dark:text-gray-200">{opt.label}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </FilterButton>
+
+                    {getActiveFilterCount() > 0 && (
                         <button
-                            onClick={() => setFilters({ category: [], platform: [], contentType: [], budget: 0 })}
-                            className="h-10 px-4 text-sm text-gray-500 font-bold hover:text-text-primary hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
+                            onClick={clearAllFilters}
+                            className="h-10 px-3 text-sm text-gray-500 font-medium hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors flex items-center gap-1"
                         >
-                            Reset
+                            <span className="material-symbols-outlined text-[16px]">close</span>
+                            Clear all
                         </button>
                     )}
                 </div>
             </div>
 
+            {/* Results count */}
+            <div className="flex items-center justify-between mb-4 shrink-0">
+                <p className="text-sm text-text-secondary dark:text-gray-400">
+                    Showing <span className="font-bold text-text-primary dark:text-white">{opportunities.length}</span> opportunities
+                </p>
+            </div>
+
             {/* Grid */}
-            <div id="gigs-grid" className="flex-1 overflow-y-auto pr-2 pb-10">
+            <div id="gigs-grid" className="flex-1 overflow-y-auto pb-8">
                 {opportunities.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
                         {opportunities.map((item) => (
-                            <Link to={`/gigs/${item.id}`} key={item.id} className="group h-full">
-                                <Card padding="p-0" className="h-full flex flex-col hover:border-gray-300 dark:hover:border-gray-600 shadow-sm hover:shadow-card-hover transition-all duration-300">
-                                    <div className="h-56 bg-cover bg-center relative overflow-hidden" style={{ backgroundImage: `url("${item.img}")` }}>
-                                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
-                                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                            <Link to={`/gigs/${item.id}`} key={item.id} className="group">
+                                <Card padding="p-0" className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                                    {/* Image */}
+                                    <div className="relative h-40 overflow-hidden">
+                                        <img
+                                            src={item.img}
+                                            alt={item.title}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
-                                        <div className="absolute top-4 left-4 flex gap-2">
-                                            <div className="bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wide">
-                                                {item.category}
-                                            </div>
-                                        </div>
-
-                                        <div className="absolute bottom-4 left-4 right-4">
-                                            <div className="flex justify-between items-end mb-2">
-                                                <Badge variant="neutral" className="bg-white/20 text-white border-transparent backdrop-blur-md">{item.type}</Badge>
-                                                <span className="text-white text-sm font-bold bg-primary px-2.5 py-1 rounded-lg shadow-lg">
-                                                    {item.budget}
-                                                </span>
-                                            </div>
-                                            <h3 className="text-xl font-display font-bold text-white mb-1 leading-snug line-clamp-1">{item.title}</h3>
-                                            <p className="text-xs text-gray-300 line-clamp-1">{item.brand} • {item.posted}</p>
-                                        </div>
+                                        {/* Category badge */}
+                                        <span className="absolute top-3 left-3 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide text-text-primary dark:text-white">
+                                            {item.category}
+                                        </span>
                                     </div>
-                                    <div className="p-5 flex-1 flex flex-col bg-white dark:bg-gray-800">
-                                        <p className="text-sm text-text-secondary dark:text-gray-400 line-clamp-2 mb-5 leading-relaxed">{item.desc}</p>
 
-                                        <div className="mt-auto flex items-center justify-between">
-                                            <div className="flex items-center -space-x-2">
-                                                {item.platform.map((p, i) => (
-                                                    <div key={p} className="size-8 rounded-full bg-white dark:bg-gray-800 border-2 border-white dark:border-gray-700 flex items-center justify-center p-1.5 shadow-sm z-10 hover:scale-110 transition-transform relative group/icon" title={p}>
-                                                        <img src={PLATFORM_LOGOS[p] || PLATFORM_LOGOS['UGC Only']} alt={p} className="w-full h-full object-contain" />
-                                                    </div>
-                                                ))}
+                                    {/* Content */}
+                                    <div className="p-4 flex-1 flex flex-col">
+                                        {/* Title & Brand */}
+                                        <h3 className="font-bold text-text-primary dark:text-white mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+                                            {item.title}
+                                        </h3>
+                                        <p className="text-xs text-text-secondary dark:text-gray-400 mb-3">
+                                            {item.brand} • {item.posted}
+                                        </p>
+
+                                        {/* Description */}
+                                        <p className="text-sm text-text-secondary dark:text-gray-400 line-clamp-2 mb-4 flex-1">
+                                            {item.desc}
+                                        </p>
+
+                                        {/* Footer */}
+                                        <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700">
+                                            {/* Platforms */}
+                                            <div className="flex items-center gap-1">
+                                                {item.platform.slice(0, 3).map((p) => {
+                                                    const style = PLATFORM_ICONS[p] || PLATFORM_ICONS['UGC Only'];
+                                                    return (
+                                                        <div
+                                                            key={p}
+                                                            className={`size-7 rounded-md ${style.bg} ${style.color} flex items-center justify-center`}
+                                                            title={p}
+                                                        >
+                                                            <span className="material-symbols-outlined text-[14px]">{style.icon}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                                {item.platform.length > 3 && (
+                                                    <span className="text-xs text-text-secondary dark:text-gray-400 ml-1">+{item.platform.length - 3}</span>
+                                                )}
                                             </div>
-                                            <span className="text-xs font-bold text-primary flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                                                View Details <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+
+                                            {/* Budget */}
+                                            <span className="text-sm font-bold text-green-600 dark:text-green-400">
+                                                {item.budget}
                                             </span>
                                         </div>
                                     </div>
@@ -258,19 +331,21 @@ const Gigs: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className="flex flex-col items-center justify-center h-96 text-center">
-                        <div className="size-20 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center mb-6 ring-8 ring-gray-50/50 dark:ring-gray-800/50">
-                            <span className="material-symbols-outlined text-4xl text-gray-300 dark:text-gray-600">search_off</span>
+                    <div className="flex flex-col items-center justify-center h-80 text-center">
+                        <div className="size-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
+                            <span className="material-symbols-outlined text-3xl text-gray-400 dark:text-gray-500">search_off</span>
                         </div>
-                        <h3 className="text-xl font-bold text-text-primary dark:text-white mb-2">No Gigs Found</h3>
-                        <p className="text-text-secondary dark:text-gray-400 max-w-xs mx-auto mb-6">We couldn't find any opportunities matching your filters. Try adjusting your search.</p>
-                        <Button variant="outline" onClick={() => { setFilters({ category: [], platform: [], contentType: [], budget: 0 }); setSearchTerm(''); }}>
+                        <h3 className="text-lg font-bold text-text-primary dark:text-white mb-2">No Opportunities Found</h3>
+                        <p className="text-sm text-text-secondary dark:text-gray-400 max-w-sm mb-4">
+                            Try adjusting your filters or search terms to find more campaigns.
+                        </p>
+                        <Button variant="secondary" onClick={clearAllFilters}>
                             Clear All Filters
                         </Button>
                     </div>
                 )}
             </div>
-        </div >
+        </div>
     );
 };
 

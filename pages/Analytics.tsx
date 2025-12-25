@@ -1,189 +1,366 @@
 import React, { useState, useEffect } from 'react';
-import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
+import Card from '../components/ui/Card';
 
+// Data
 const earningsData = [
-  { name: 'Jan', value: 25 }, { name: 'Feb', value: 30 }, { name: 'Mar', value: 45 },
-  { name: 'Apr', value: 50 }, { name: 'May', value: 48 }, { name: 'Jun', value: 60 },
-  { name: 'Jul', value: 55 }, { name: 'Aug', value: 75 }, { name: 'Sep', value: 82 },
-  { name: 'Oct', value: 78 }, { name: 'Nov', value: 85 }, { name: 'Dec', value: 90 }
+   { name: 'Jan', value: 1250 }, { name: 'Feb', value: 1800 }, { name: 'Mar', value: 2450 },
+   { name: 'Apr', value: 2100 }, { name: 'May', value: 2800 }, { name: 'Jun', value: 3200 },
+   { name: 'Jul', value: 2950 }, { name: 'Aug', value: 3800 }, { name: 'Sep', value: 4200 },
+   { name: 'Oct', value: 3900 }, { name: 'Nov', value: 4500 }, { name: 'Dec', value: 4850 }
 ];
 
-const engagementData = [
-  { name: 'W1', revenue: 1200, engagement: 40 },
-  { name: 'W2', revenue: 1850, engagement: 55 },
-  { name: 'W3', revenue: 2900, engagement: 80 },
-  { name: 'W4', revenue: 2100, engagement: 60 },
-  { name: 'W5', revenue: 2450, engagement: 68 },
-  { name: 'W6', revenue: 3200, engagement: 85 }
+const bidFunnelData = [
+   { name: 'Viewed', value: 145, fill: '#E5E7EB' },
+   { name: 'Applied', value: 42, fill: '#93C5FD' },
+   { name: 'Shortlisted', value: 18, fill: '#60A5FA' },
+   { name: 'Won', value: 12, fill: '#075CD1' },
 ];
+
+const contentTypeData = [
+   { name: 'Video', value: 45, fill: '#EF4444' },
+   { name: 'Reels', value: 28, fill: '#EC4899' },
+   { name: 'Stories', value: 15, fill: '#8B5CF6' },
+   { name: 'UGC', value: 12, fill: '#06B6D4' },
+];
+
+const campaignData = [
+   { month: 'Jul', completed: 2, inProgress: 1 },
+   { month: 'Aug', completed: 3, inProgress: 2 },
+   { month: 'Sep', completed: 4, inProgress: 1 },
+   { month: 'Oct', completed: 3, inProgress: 3 },
+   { month: 'Nov', completed: 5, inProgress: 2 },
+   { month: 'Dec', completed: 4, inProgress: 4 },
+];
+
+// Social platform analytics
+const socialPlatformData = {
+   YouTube: { followers: '124.5K', engagement: '4.2%', earnings: '$12,450', color: '#EF4444', icon: 'smart_display', avgViews: '45.2K', topContent: 'Tech Reviews' },
+   Instagram: { followers: '89.2K', engagement: '6.8%', earnings: '$8,200', color: '#E4405F', icon: 'photo_camera', avgViews: '12.5K', topContent: 'Lifestyle' },
+   TikTok: { followers: '256.1K', engagement: '12.4%', earnings: '$5,800', color: '#000000', icon: 'music_note', avgViews: '89.3K', topContent: 'Trends' },
+   Twitter: { followers: '45.3K', engagement: '2.1%', earnings: '$2,000', color: '#1DA1F2', icon: 'tag', avgViews: '8.2K', topContent: 'Tech News' },
+};
+
+// KPI detail data
+const kpiDetails = {
+   earnings: {
+      title: 'Total Earnings',
+      value: '$28,450',
+      change: '+14.2%',
+      description: 'Total revenue from all completed campaigns',
+      methodology: 'Sum of all payments received from brands after escrow release. Excludes pending payments.',
+      breakdown: [
+         { label: 'Video Campaigns', value: '$15,200', percent: 53 },
+         { label: 'Social Posts', value: '$8,450', percent: 30 },
+         { label: 'UGC Content', value: '$4,800', percent: 17 },
+      ]
+   },
+   bidSuccess: {
+      title: 'Bid Success Rate',
+      value: '28.5%',
+      change: '+3.2%',
+      description: 'Percentage of bids that result in winning a campaign',
+      methodology: 'Calculated as (Won Bids / Total Bids Placed) × 100. Only counts bids on opportunities that have closed.',
+      breakdown: [
+         { label: 'Tech Category', value: '42%', percent: 42 },
+         { label: 'Lifestyle', value: '31%', percent: 31 },
+         { label: 'Gaming', value: '18%', percent: 18 },
+      ]
+   },
+   engagement: {
+      title: 'Avg. Engagement',
+      value: '8.4%',
+      change: '+0.5%',
+      description: 'Average engagement rate across all platforms',
+      methodology: 'Weighted average of (Likes + Comments + Shares) / Impressions across all connected platforms.',
+      breakdown: [
+         { label: 'TikTok', value: '12.4%', percent: 100 },
+         { label: 'Instagram', value: '6.8%', percent: 55 },
+         { label: 'YouTube', value: '4.2%', percent: 34 },
+      ]
+   },
+   campaigns: {
+      title: 'Active Campaigns',
+      value: '4',
+      change: '+2',
+      description: 'Currently active campaign collaborations',
+      methodology: 'Count of campaigns in "In Progress" status. Excludes completed and pending review.',
+      breakdown: [
+         { label: 'Content Creation', value: '2', percent: 50 },
+         { label: 'Brand Review', value: '1', percent: 25 },
+         { label: 'Final Edits', value: '1', percent: 25 },
+      ]
+   },
+};
 
 const ANALYTICS_TUTORIAL_STEPS: TutorialStep[] = [
-  {
-    targetId: 'analytics-kpi',
-    title: 'Key Performance Indicators',
-    content: 'Instant view of your total earnings, average engagement rates, and audience growth.',
-    position: 'bottom'
-  },
-  {
-    targetId: 'analytics-main-chart',
-    title: 'Revenue Trends',
-    content: 'Visualize your income over time. Switch between Year and Month views to identify peak seasons.',
-    position: 'top'
-  },
-   {
-    targetId: 'analytics-platform',
-    title: 'Platform Mix',
-    content: 'See which platforms (YouTube, Instagram, etc.) are driving the most value for your business.',
-    position: 'left'
-  }
+   { targetId: 'analytics-kpi', title: 'Key Metrics', content: 'Click any card to see detailed breakdown and calculation methodology.', position: 'bottom' },
+   { targetId: 'analytics-main-chart', title: 'Revenue Trends', content: 'Track your income over time. Hover for details.', position: 'top' },
+   { targetId: 'analytics-social', title: 'Platform Analytics', content: 'See performance breakdown by social platform.', position: 'left' }
 ];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white dark:bg-gray-900 p-3 border border-border-color dark:border-gray-700 rounded-lg shadow-lg">
-        <p className="text-sm font-bold text-text-primary dark:text-white">{label}</p>
-        <p className="text-sm text-brand-blue">
-          {payload[0].value}
-        </p>
-      </div>
-    );
-  }
-  return null;
+   if (active && payload && payload.length) {
+      return (
+         <div className="bg-white dark:bg-gray-900 p-3 border border-border-color dark:border-gray-700 rounded-lg shadow-lg">
+            <p className="text-sm font-bold text-text-primary dark:text-white">{label}</p>
+            {payload.map((entry: any, index: number) => (
+               <p key={index} className="text-sm" style={{ color: entry.color || '#075CD1' }}>
+                  {entry.name || entry.dataKey}: {typeof entry.value === 'number' && entry.dataKey !== 'engagement' ? `$${entry.value.toLocaleString()}` : entry.value}
+               </p>
+            ))}
+         </div>
+      );
+   }
+   return null;
 };
 
+// KPI Detail Modal
+const KPIDetailModal: React.FC<{ data: typeof kpiDetails.earnings; onClose: () => void }> = ({ data, onClose }) => (
+   <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose}></div>
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-float w-full max-w-md relative z-10 animate-in fade-in zoom-in-95 duration-200 overflow-hidden">
+         <div className="px-6 py-4 border-b border-border-color dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 flex justify-between items-center">
+            <h3 className="font-bold text-text-primary dark:text-white">{data.title}</h3>
+            <button onClick={onClose} className="text-text-secondary hover:text-text-primary dark:text-gray-400 dark:hover:text-white">
+               <span className="material-symbols-outlined">close</span>
+            </button>
+         </div>
+         <div className="p-6">
+            <div className="flex items-baseline gap-3 mb-4">
+               <span className="text-4xl font-bold text-text-primary dark:text-white">{data.value}</span>
+               <span className="text-sm font-medium text-green-600 dark:text-green-400 flex items-center gap-0.5">
+                  <span className="material-symbols-outlined text-[14px]">trending_up</span>
+                  {data.change}
+               </span>
+            </div>
+            <p className="text-sm text-text-secondary dark:text-gray-400 mb-6">{data.description}</p>
+
+            <h4 className="text-xs font-bold text-text-secondary dark:text-gray-400 uppercase tracking-wider mb-3">Breakdown</h4>
+            <div className="space-y-3 mb-6">
+               {data.breakdown.map((item, i) => (
+                  <div key={i}>
+                     <div className="flex justify-between text-sm mb-1">
+                        <span className="text-text-primary dark:text-white">{item.label}</span>
+                        <span className="font-bold text-text-primary dark:text-white">{item.value}</span>
+                     </div>
+                     <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-primary rounded-full" style={{ width: `${item.percent}%` }} />
+                     </div>
+                  </div>
+               ))}
+            </div>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg p-4">
+               <div className="flex items-start gap-2">
+                  <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-[18px] mt-0.5">info</span>
+                  <div>
+                     <h5 className="text-xs font-bold text-blue-700 dark:text-blue-400 uppercase mb-1">How it's calculated</h5>
+                     <p className="text-xs text-blue-600 dark:text-blue-300">{data.methodology}</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+);
+
 const Analytics: React.FC = () => {
-  const [showTutorial, setShowTutorial] = useState(false);
+   const [showTutorial, setShowTutorial] = useState(false);
+   const [selectedKPI, setSelectedKPI] = useState<keyof typeof kpiDetails | null>(null);
 
-  useEffect(() => {
-    const isNewUserSession = sessionStorage.getItem('creonity_tour_session') === 'true';
-    const isCompleted = localStorage.getItem('creonity_analytics_tutorial_completed');
-    if (isNewUserSession && !isCompleted) {
-       const timer = setTimeout(() => setShowTutorial(true), 800);
-       return () => clearTimeout(timer);
-    }
-  }, []);
+   useEffect(() => {
+      const isNewUserSession = sessionStorage.getItem('creonity_tour_session') === 'true';
+      const isCompleted = localStorage.getItem('creonity_analytics_tutorial_completed');
+      if (isNewUserSession && !isCompleted) {
+         const timer = setTimeout(() => setShowTutorial(true), 800);
+         return () => clearTimeout(timer);
+      }
+   }, []);
 
-  const handleTutorialComplete = () => {
+   const handleTutorialComplete = () => {
       localStorage.setItem('creonity_analytics_tutorial_completed', 'true');
       setShowTutorial(false);
-  };
+   };
 
-  return (
-    <div className="max-w-[1600px] mx-auto flex flex-col gap-6 p-6 relative">
-       <TutorialOverlay 
-         isOpen={showTutorial} 
-         steps={ANALYTICS_TUTORIAL_STEPS}
-         onComplete={handleTutorialComplete}
-         onSkip={handleTutorialComplete}
-       />
+   const kpiCards = [
+      { key: 'earnings', label: "Total Earnings", value: "$28,450", icon: "payments", color: "green", change: "+14.2%" },
+      { key: 'bidSuccess', label: "Bid Success Rate", value: "28.5%", icon: "trending_up", color: "blue", change: "+3.2%" },
+      { key: 'engagement', label: "Avg. Engagement", value: "8.4%", icon: "favorite", color: "red", change: "+0.5%" },
+      { key: 'campaigns', label: "Active Campaigns", value: "4", icon: "work", color: "purple", change: "+2" },
+   ];
 
-       <div id="analytics-kpi" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-         {[
-           { label: "Total Earnings", value: "$28,450", icon: "payments", color: "green", change: "+14.2%" },
-           { label: "Avg. Engagement", value: "8.4%", icon: "favorite", color: "red", change: "+0.5%" },
-           { label: "Campaign ROI", value: "315%", icon: "percent", color: "blue", change: "Stable", neutral: true },
-           { label: "Audience Growth", value: "+2.4k", icon: "groups", color: "purple", change: "+2.1%" },
-         ].map((item, i) => (
-           <div key={i} className="bg-white dark:bg-gray-800 p-5 rounded-xl border border-border-color dark:border-gray-700 shadow-card flex flex-col justify-between h-32 hover:shadow-lg transition-shadow">
-              <div className="flex justify-between items-start">
-                <div>
-                   <p className="text-text-secondary dark:text-gray-400 text-xs font-medium uppercase tracking-wider mb-1">{item.label}</p>
-                   <p className="text-3xl font-semibold text-text-primary dark:text-white">{item.value}</p>
-                </div>
-                <div className={`p-2 rounded-lg ${item.color === 'green' ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' : item.color === 'red' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : item.color === 'blue' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400'}`}>
-                   <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 mt-auto">
-                 <span className={`text-xs font-medium ${item.neutral ? 'text-accent-teal-dark' : 'text-green-600 dark:text-green-400'} flex items-center gap-1`}>
-                    <span className="material-symbols-outlined text-[14px]">{item.neutral ? 'remove' : 'trending_up'}</span> 
-                    {item.change}
-                 </span>
-                 <span className="text-xs text-text-secondary dark:text-gray-400">vs last month</span>
-              </div>
-           </div>
-         ))}
-       </div>
+   return (
+      <div className="max-w-[1600px] mx-auto flex flex-col gap-6 p-6 lg:p-8 relative">
+         <TutorialOverlay isOpen={showTutorial} steps={ANALYTICS_TUTORIAL_STEPS} onComplete={handleTutorialComplete} onSkip={handleTutorialComplete} />
 
-       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div id="analytics-main-chart" className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card">
-             <div className="flex justify-between items-center mb-6">
-                <div>
-                   <h3 className="text-lg font-semibold text-text-primary dark:text-white">Earnings Over Time</h3>
-                   <p className="text-xs text-text-secondary dark:text-gray-400 mt-1">Net revenue generated from all campaigns</p>
-                </div>
-                <div className="flex items-center gap-2 border border-border-color dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 p-1">
-                   <button className="px-2 py-1 text-xs font-medium bg-white dark:bg-gray-700 text-text-primary dark:text-white rounded shadow-sm">Year</button>
-                   <button className="px-2 py-1 text-xs font-medium text-text-secondary dark:text-gray-400 hover:text-text-primary dark:hover:text-white">Month</button>
-                </div>
-             </div>
-             <div className="w-full h-72">
-                <ResponsiveContainer width="100%" height="100%">
-                   <AreaChart data={earningsData}>
-                      <defs>
-                        <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                           <stop offset="5%" stopColor="#075CD1" stopOpacity={0.1}/>
-                           <stop offset="95%" stopColor="#075CD1" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#6B7280'}} dy={10} />
-                      <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#E5E7EB', strokeWidth: 1 }} />
-                      <Area type="monotone" dataKey="value" stroke="#075CD1" strokeWidth={3} fillOpacity={1} fill="url(#chartGradient)" />
-                   </AreaChart>
-                </ResponsiveContainer>
-             </div>
-          </div>
+         {/* KPI Cards */}
+         <div id="analytics-kpi" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {kpiCards.map((item, i) => (
+               <Card key={i} padding="p-4" className="flex flex-col justify-between h-28 cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all group" onClick={() => setSelectedKPI(item.key as keyof typeof kpiDetails)}>
+                  <div className="flex justify-between items-start">
+                     <div>
+                        <p className="text-text-secondary dark:text-gray-400 text-[10px] font-medium uppercase tracking-wider mb-0.5">{item.label}</p>
+                        <p className="text-2xl font-bold text-text-primary dark:text-white group-hover:text-primary transition-colors">{item.value}</p>
+                     </div>
+                     <div className={`p-1.5 rounded-lg ${item.color === 'green' ? 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400' : item.color === 'red' ? 'bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400' : item.color === 'blue' ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400' : 'bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400'}`}>
+                        <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
+                     </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                     <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-medium text-green-600 dark:text-green-400 flex items-center gap-0.5">
+                           <span className="material-symbols-outlined text-[12px]">trending_up</span>
+                           {item.change}
+                        </span>
+                        <span className="text-[10px] text-text-secondary dark:text-gray-500">vs last month</span>
+                     </div>
+                     <span className="material-symbols-outlined text-[14px] text-gray-400 group-hover:text-primary transition-colors">arrow_forward</span>
+                  </div>
+               </Card>
+            ))}
+         </div>
 
-          <div id="analytics-platform" className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card flex flex-col">
-              <h3 className="text-lg font-semibold text-text-primary dark:text-white mb-6">Platform Performance</h3>
-              <div className="flex-1 flex flex-col justify-center gap-8">
-                 {[
-                   { label: "Video Reviews", val: 45, color: "bg-red-500", icon: "smart_display", iconColor: "text-red-600 bg-red-50 dark:bg-red-900/20 dark:text-red-400" },
-                   { label: "Social Feed", val: 32, color: "bg-pink-500", icon: "photo_camera", iconColor: "text-pink-600 bg-pink-50 dark:bg-pink-900/20 dark:text-pink-400" },
-                   { label: "Blog Posts", val: 15, color: "bg-blue-500", icon: "feed", iconColor: "text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-400" },
-                   { label: "Podcasts", val: 8, color: "bg-gray-500", icon: "podcasts", iconColor: "text-gray-600 bg-gray-100 dark:bg-gray-700 dark:text-gray-400" },
-                 ].map((p, i) => (
-                    <div key={i} className="group">
-                       <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                             <div className={`p-1.5 rounded-md ${p.iconColor}`}>
-                                <span className="material-symbols-outlined text-[18px]">{p.icon}</span>
-                             </div>
-                             <span className="text-sm font-medium text-text-primary dark:text-white">{p.label}</span>
-                          </div>
-                          <span className="text-sm font-bold text-text-primary dark:text-white">{p.val}%</span>
-                       </div>
-                       <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
-                          <div className={`h-full ${p.color} rounded-full`} style={{width: `${p.val}%`}}></div>
-                       </div>
-                    </div>
-                 ))}
-              </div>
-          </div>
-       </div>
+         {/* Charts Row */}
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card id="analytics-main-chart" className="lg:col-span-2">
+               <div className="flex justify-between items-center mb-4">
+                  <div>
+                     <h3 className="text-lg font-bold text-text-primary dark:text-white">Earnings Over Time</h3>
+                     <p className="text-xs text-text-secondary dark:text-gray-400">Net revenue from completed campaigns</p>
+                  </div>
+               </div>
+               <div className="w-full h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <AreaChart data={earningsData}>
+                        <defs>
+                           <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#075CD1" stopOpacity={0.15} />
+                              <stop offset="95%" stopColor="#075CD1" stopOpacity={0} />
+                           </linearGradient>
+                        </defs>
+                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280' }} dy={10} />
+                        <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#E5E7EB', strokeWidth: 1 }} />
+                        <Area type="monotone" dataKey="value" stroke="#075CD1" strokeWidth={2} fillOpacity={1} fill="url(#chartGradient)" name="Earnings" />
+                     </AreaChart>
+                  </ResponsiveContainer>
+               </div>
+            </Card>
 
-       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-card">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-             <div>
-                <h3 className="text-lg font-semibold text-text-primary dark:text-white">Engagement vs Revenue</h3>
-                <p className="text-xs text-text-secondary dark:text-gray-400 mt-1">Correlation between audience engagement and campaign revenue</p>
-             </div>
-          </div>
-          <div className="w-full h-64">
-             <ResponsiveContainer width="100%" height="100%">
-                 <BarChart data={engagementData} barGap={0}>
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#6B7280'}} dy={10} />
-                    <Tooltip content={<CustomTooltip />} cursor={{fill: 'transparent'}} />
-                    <Bar dataKey="revenue" fill="#F3F4F6" radius={[4, 4, 0, 0]} barSize={32} className="dark:fill-gray-700" />
-                    <Bar dataKey="engagement" fill="#1BD1C9" radius={[4, 4, 0, 0]} barSize={8} />
-                 </BarChart>
-             </ResponsiveContainer>
-          </div>
-       </div>
-    </div>
-  );
+            <Card id="analytics-funnel">
+               <h3 className="text-lg font-bold text-text-primary dark:text-white mb-4">Bid Conversion Funnel</h3>
+               <div className="space-y-3">
+                  {bidFunnelData.map((item, i) => (
+                     <div key={i}>
+                        <div className="flex justify-between items-center mb-1">
+                           <span className="text-sm font-medium text-text-primary dark:text-white">{item.name}</span>
+                           <span className="text-sm font-bold text-text-primary dark:text-white">{item.value}</span>
+                        </div>
+                        <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                           <div className="h-full rounded-full" style={{ width: `${(item.value / 145) * 100}%`, backgroundColor: item.fill }} />
+                        </div>
+                     </div>
+                  ))}
+               </div>
+               <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                  <span className="text-sm text-text-secondary dark:text-gray-400">Overall Win Rate</span>
+                  <span className="text-lg font-bold text-green-600 dark:text-green-400">28.5%</span>
+               </div>
+            </Card>
+         </div>
+
+         {/* Social Platform Analytics */}
+         <div id="analytics-social">
+            <h3 className="text-lg font-bold text-text-primary dark:text-white mb-4">Platform Analytics</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+               {Object.entries(socialPlatformData).map(([platform, data]) => (
+                  <Card key={platform} className="cursor-pointer hover:ring-2 hover:ring-primary/30 transition-all">
+                     <div className="flex items-center gap-3 mb-4">
+                        <div className="size-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${data.color}15` }}>
+                           <span className="material-symbols-outlined text-[20px]" style={{ color: data.color }}>{data.icon}</span>
+                        </div>
+                        <div>
+                           <h4 className="font-bold text-text-primary dark:text-white">{platform}</h4>
+                           <p className="text-xs text-text-secondary dark:text-gray-400">{data.followers} followers</p>
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-2 gap-3">
+                        <div>
+                           <p className="text-[10px] text-text-secondary dark:text-gray-400 uppercase">Engagement</p>
+                           <p className="text-lg font-bold text-text-primary dark:text-white">{data.engagement}</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] text-text-secondary dark:text-gray-400 uppercase">Earnings</p>
+                           <p className="text-lg font-bold text-green-600 dark:text-green-400">{data.earnings}</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] text-text-secondary dark:text-gray-400 uppercase">Avg. Views</p>
+                           <p className="text-sm font-medium text-text-primary dark:text-white">{data.avgViews}</p>
+                        </div>
+                        <div>
+                           <p className="text-[10px] text-text-secondary dark:text-gray-400 uppercase">Top Niche</p>
+                           <p className="text-sm font-medium text-text-primary dark:text-white">{data.topContent}</p>
+                        </div>
+                     </div>
+                  </Card>
+               ))}
+            </div>
+         </div>
+
+         {/* Campaign Activity & Content Type */}
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="lg:col-span-2">
+               <div className="flex justify-between items-center mb-4">
+                  <div>
+                     <h3 className="text-lg font-bold text-text-primary dark:text-white">Campaign Activity</h3>
+                     <p className="text-xs text-text-secondary dark:text-gray-400">Completed vs In Progress</p>
+                  </div>
+               </div>
+               <div className="w-full h-56">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <BarChart data={campaignData} barGap={4}>
+                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#6B7280' }} dy={10} />
+                        <Tooltip content={<CustomTooltip />} cursor={{ fill: 'transparent' }} />
+                        <Bar dataKey="completed" fill="#10B981" radius={[4, 4, 0, 0]} name="Completed" />
+                        <Bar dataKey="inProgress" fill="#60A5FA" radius={[4, 4, 0, 0]} name="In Progress" />
+                     </BarChart>
+                  </ResponsiveContainer>
+               </div>
+               <div className="flex items-center justify-center gap-6 mt-2">
+                  <div className="flex items-center gap-2"><div className="size-3 rounded bg-green-500" /><span className="text-xs text-text-secondary dark:text-gray-400">Completed</span></div>
+                  <div className="flex items-center gap-2"><div className="size-3 rounded bg-blue-400" /><span className="text-xs text-text-secondary dark:text-gray-400">In Progress</span></div>
+               </div>
+            </Card>
+
+            <Card>
+               <h3 className="text-lg font-bold text-text-primary dark:text-white mb-4">Content Type Revenue</h3>
+               <div className="w-full h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <PieChart>
+                        <Pie data={contentTypeData} cx="50%" cy="50%" innerRadius={50} outerRadius={70} paddingAngle={3} dataKey="value">
+                           {contentTypeData.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill} />))}
+                        </Pie>
+                        <Tooltip content={<CustomTooltip />} />
+                     </PieChart>
+                  </ResponsiveContainer>
+               </div>
+               <div className="grid grid-cols-2 gap-2 mt-2">
+                  {contentTypeData.map((item, i) => (
+                     <div key={i} className="flex items-center gap-2">
+                        <div className="size-2.5 rounded-full" style={{ backgroundColor: item.fill }} />
+                        <span className="text-xs text-text-secondary dark:text-gray-400">{item.name}</span>
+                        <span className="text-xs font-bold text-text-primary dark:text-white ml-auto">{item.value}%</span>
+                     </div>
+                  ))}
+               </div>
+            </Card>
+         </div>
+
+         {/* KPI Detail Modal */}
+         {selectedKPI && <KPIDetailModal data={kpiDetails[selectedKPI]} onClose={() => setSelectedKPI(null)} />}
+      </div>
+   );
 };
 
 export default Analytics;

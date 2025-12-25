@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Card from '../components/ui/Card';
 import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
 
 const WALLET_TUTORIAL_STEPS: TutorialStep[] = [
@@ -51,7 +52,7 @@ const Wallet: React.FC = () => {
       />
 
       <section id="wallet-cards" className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
+        <Card hoverable>
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400">
@@ -67,8 +68,8 @@ const Wallet: React.FC = () => {
             <h2 className="text-3xl font-bold text-text-primary dark:text-white tracking-tight">$42,850.00</h2>
             <p className="text-xs text-text-secondary dark:text-gray-400">Lifetime earnings across all campaigns</p>
           </div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
+        </Card>
+        <Card hoverable>
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
@@ -82,8 +83,8 @@ const Wallet: React.FC = () => {
             <h2 className="text-3xl font-bold text-text-primary dark:text-white tracking-tight">$3,200.00</h2>
             <p className="text-xs text-text-secondary dark:text-gray-400">Held securely until campaign completion</p>
           </div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl border border-border-color dark:border-gray-700 shadow-sm hover:shadow-md transition-all">
+        </Card>
+        <Card hoverable>
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-2">
               <div className="p-2 rounded-lg bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400">
@@ -97,7 +98,7 @@ const Wallet: React.FC = () => {
             <h2 className="text-3xl font-bold text-text-primary dark:text-white tracking-tight">$8,450.00</h2>
             <p className="text-xs text-text-secondary dark:text-gray-400">Ready for immediate withdrawal</p>
           </div>
-        </div>
+        </Card>
       </section>
 
       <section id="wallet-history" className="flex flex-col gap-4">

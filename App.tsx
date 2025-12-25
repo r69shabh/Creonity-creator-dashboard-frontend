@@ -18,19 +18,17 @@ import Signup from './pages/auth/Signup';
 import Onboarding from './pages/onboarding/Onboarding';
 import Campaigns from './pages/Campaigns';
 import CampaignDetail from './pages/CampaignDetail';
-import Marketplace from './pages/Marketplace';
-import MarketplaceDetail from './pages/MarketplaceDetail';
 import { EntityProfileProvider } from './context/EntityProfileContext';
 import { ToastProvider } from './context/ToastContext';
 import EntityDrawer from './components/EntityDrawer';
 import ToastContainer from './components/ToastContainer';
 
 // Wrapper to handle routing logic based on auth state
-const AppRoutes: React.FC<{ 
-  isAuthenticated: boolean; 
-  isOnboarded: boolean; 
-  login: (skipOnboarding?: boolean) => void; 
-  completeOnboarding: () => void; 
+const AppRoutes: React.FC<{
+  isAuthenticated: boolean;
+  isOnboarded: boolean;
+  login: (skipOnboarding?: boolean) => void;
+  completeOnboarding: () => void;
   logout: () => void;
   toggleTheme: () => void;
   darkMode: boolean;
@@ -42,18 +40,16 @@ const AppRoutes: React.FC<{
 
   // Determine page title
   const getPageTitle = (pathname: string) => {
-    if (matchPath("/gigs/:id", pathname)) return 'Gig Details';
-    if (matchPath("/campaigns/:id", pathname)) return 'Campaign Details';
+    if (matchPath("/gigs/:id", pathname)) return 'Opportunity Details';
+    if (matchPath("/campaigns/:id", pathname)) return 'Bid Details';
     if (matchPath("/collaborations/:id", pathname)) return 'Workroom';
     if (matchPath("/drive/:folderName", pathname)) return 'Workspace';
-    if (matchPath("/marketplace/:id", pathname)) return 'Opportunity Details';
-    
+
     switch (pathname) {
       case '/': return 'Overview';
-      case '/gigs': return 'Find Gigs';
-      case '/campaigns': return 'Campaigns';
-      case '/marketplace': return 'Marketplace';
-      case '/collaborations': return 'My Work & Applications';
+      case '/gigs': return 'Find Opportunities';
+      case '/campaigns': return 'My Bids';
+      case '/collaborations': return 'My Work';
       case '/analytics': return 'Analytics & Insights';
       case '/wallet': return 'Payments & Escrow';
       case '/profile': return 'My Creator Profile';
@@ -80,10 +76,10 @@ const AppRoutes: React.FC<{
   if (isAuthenticated && !isOnboarded) {
     return (
       <div className="bg-gray-50 dark:bg-gray-950 min-h-screen text-text-primary dark:text-gray-100 font-display antialiased transition-colors duration-200">
-         <Routes>
-            <Route path="/onboarding" element={<Onboarding onComplete={completeOnboarding} />} />
-            <Route path="*" element={<Navigate to="/onboarding" replace />} />
-         </Routes>
+        <Routes>
+          <Route path="/onboarding" element={<Onboarding onComplete={completeOnboarding} />} />
+          <Route path="*" element={<Navigate to="/onboarding" replace />} />
+        </Routes>
       </div>
     );
   }
@@ -92,10 +88,10 @@ const AppRoutes: React.FC<{
   return (
     <div className="flex h-screen w-full bg-background-light dark:bg-gray-900 text-text-primary dark:text-gray-100 font-display antialiased overflow-hidden transition-colors duration-200">
       <Sidebar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} onLogout={logout} />
-      
+
       {/* Overlay for mobile */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-20 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -103,12 +99,12 @@ const AppRoutes: React.FC<{
 
       <div className="flex-1 flex flex-col h-full overflow-hidden relative w-full">
         {!isMessagesPage && (
-          <Header 
-            title={getPageTitle(location.pathname)} 
-            onMenuClick={() => setMobileMenuOpen(true)} 
+          <Header
+            title={getPageTitle(location.pathname)}
+            onMenuClick={() => setMobileMenuOpen(true)}
           />
         )}
-        
+
         <main className={`flex-1 overflow-hidden ${!isMessagesPage ? 'overflow-y-auto scroll-smooth' : ''} bg-background-light dark:bg-gray-900`}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
@@ -116,8 +112,10 @@ const AppRoutes: React.FC<{
             <Route path="/gigs/:id" element={<GigDetail />} />
             <Route path="/campaigns" element={<Campaigns />} />
             <Route path="/campaigns/:id" element={<CampaignDetail />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
+            {/* Redirects for removed pages */}
+            <Route path="/marketplace" element={<Navigate to="/gigs" replace />} />
+            <Route path="/marketplace/:id" element={<Navigate to="/gigs" replace />} />
+            <Route path="/auctions" element={<Navigate to="/campaigns" replace />} />
             <Route path="/collaborations" element={<Collaborations />} />
             <Route path="/collaborations/:id" element={<CollaborationDetail />} />
             <Route path="/drive/:folderName" element={<FolderView />} />
@@ -140,12 +138,12 @@ const AppRoutes: React.FC<{
 
 const AppContent: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   // -- Auth & Onboarding State Management --
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('creonity_auth') === 'true';
   });
-  
+
   const [isOnboarded, setIsOnboarded] = useState(() => {
     return localStorage.getItem('creonity_onboarded') === 'true';
   });
@@ -159,7 +157,7 @@ const AppContent: React.FC = () => {
     }
     return savedTheme === 'dark';
   });
-  
+
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -177,11 +175,11 @@ const AppContent: React.FC = () => {
     localStorage.setItem('creonity_auth', 'true');
     // Standard login does NOT trigger tutorials
     sessionStorage.removeItem('creonity_tour_session');
-    
+
     setIsAuthenticated(true);
     if (skipOnboarding) {
-        localStorage.setItem('creonity_onboarded', 'true');
-        setIsOnboarded(true);
+      localStorage.setItem('creonity_onboarded', 'true');
+      setIsOnboarded(true);
     }
   };
 
@@ -201,7 +199,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <AppRoutes 
+    <AppRoutes
       isAuthenticated={isAuthenticated}
       isOnboarded={isOnboarded}
       login={handleLogin}

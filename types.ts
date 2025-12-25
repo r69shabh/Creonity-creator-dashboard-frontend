@@ -15,12 +15,13 @@ export interface DriveFolder {
 
 export const NAV_ITEMS: NavItem[] = [
   { icon: 'dashboard', label: 'Dashboard', path: '/' },
-  { icon: 'work', label: 'Gigs', path: '/gigs', badge: 'New', badgeColor: 'bg-brand-teal text-brand-navy' },
-  { icon: 'campaign', label: 'Campaigns', path: '/campaigns' },
-  { icon: 'storefront', label: 'Marketplace', path: '/marketplace' },
+  { icon: 'work', label: 'Opportunities', path: '/gigs', badge: 'New', badgeColor: 'bg-brand-teal text-brand-navy' },
+  { icon: 'gavel', label: 'My Bids', path: '/campaigns' },
   { icon: 'handshake', label: 'My Work', path: '/collaborations' },
+  { icon: 'chat', label: 'Messages', path: '/messages', badge: '3', badgeColor: 'bg-brand-teal text-white' },
   { icon: 'analytics', label: 'Analytics', path: '/analytics' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
+  { icon: 'person', label: 'Profile', path: '/profile' },
   { icon: 'settings', label: 'Settings', path: '/settings' },
 ];
 

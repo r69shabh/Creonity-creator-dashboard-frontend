@@ -29,11 +29,11 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
   }, []);
 
   const markAllRead = () => {
-    setNotifications(notifications.map(n => ({...n, unread: false})));
+    setNotifications(notifications.map(n => ({ ...n, unread: false })));
   };
 
   const getIcon = (type: string) => {
-    switch(type) {
+    switch (type) {
       // Changed orange to teal
       case 'bid': return { icon: 'gavel', color: 'text-brand-blue bg-blue-50 dark:bg-blue-900/30' };
       case 'alert': return { icon: 'timer', color: 'text-accent-teal-dark bg-[#1BD1C9]/10 dark:text-[#1BD1C9] dark:bg-[#036964]/30' };
@@ -46,17 +46,18 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
   return (
     <header className="h-16 flex items-center justify-between px-6 py-4 border-b border-border-color dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-20 transition-colors">
       <div className="flex items-center gap-4">
-        <button onClick={onMenuClick} className="lg:hidden p-2 text-text-secondary hover:text-text-primary dark:text-gray-400 dark:hover:text-white">
+        <button onClick={onMenuClick} className="lg:hidden p-2 text-text-secondary hover:text-text-primary dark:text-gray-400 dark:hover:text-white" aria-label="Open menu">
           <span className="material-symbols-outlined">menu</span>
         </button>
         <h1 className="text-2xl font-semibold tracking-tight text-text-primary dark:text-white">{title}</h1>
       </div>
-      
+
       <div className="flex items-center gap-3 ml-auto relative">
         <div ref={notificationRef} className="relative">
-          <button 
+          <button
             onClick={() => setShowNotifications(!showNotifications)}
             className={`relative p-2 rounded-lg transition-colors ${showNotifications ? 'bg-gray-100 dark:bg-gray-800 text-text-primary dark:text-white' : 'text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-text-primary dark:hover:text-white'}`}
+            aria-label="Notifications"
           >
             <span className="material-symbols-outlined">notifications</span>
             {unreadCount > 0 && <span className="absolute top-2 right-2 size-2 bg-accent-teal rounded-full ring-2 ring-white dark:ring-gray-900"></span>}
