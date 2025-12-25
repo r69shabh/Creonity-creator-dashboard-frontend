@@ -14,6 +14,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
   const navigate = useNavigate();
   const { addToast } = useToast();
   const [folders, setFolders] = useState(DRIVE_FOLDERS);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
   const user = {
     firstName: 'Alex',
@@ -111,33 +112,45 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
           </NavLink>
         ))}
 
-        <div className="mt-6 flex items-center justify-between px-4 py-2">
-          <div className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Workspace</div>
-          <button onClick={handleAddFolder} className="p-1 text-gray-400 hover:text-brand-blue hover:bg-brand-blue/10 rounded transition-all" aria-label="Add folder">
-            <span className="material-symbols-outlined text-[16px] block">add</span>
-          </button>
-        </div>
-
-        {folders.map((item, idx) => (
-          <NavLink
-            key={idx}
-            to={`/drive/${item.label}`}
-            onClick={() => setMobileMenuOpen(false)}
-            className={({ isActive }) => `
-              flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-medium transition-all w-full text-left group
-              ${isActive
-                ? 'bg-gray-100 dark:bg-gray-800/50 text-text-primary dark:text-white'
-                : 'text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-text-primary dark:hover:text-white'
-              }
-            `}
+        {/* Collapsible Workspace */}
+        <div className="mt-4">
+          <button
+            onClick={() => setWorkspaceOpen(!workspaceOpen)}
+            className="w-full flex items-center justify-between px-4 py-2 text-[11px] font-bold text-gray-400 uppercase tracking-widest hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
-            <div className="flex items-center gap-3">
-              <span className={`material-symbols-outlined text-[18px] ${item.color} opacity-80 group-hover:opacity-100`}>folder</span>
-              {item.label}
+            <span>Workspace</span>
+            <span className={`material-symbols-outlined text-[16px] transition-transform ${workspaceOpen ? 'rotate-180' : ''}`}>expand_more</span>
+          </button>
+
+          {workspaceOpen && (
+            <div className="mt-1 space-y-1 animate-in fade-in slide-in-from-top-2 duration-200">
+              {folders.map((item, idx) => (
+                <NavLink
+                  key={idx}
+                  to={`/drive/${item.label}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) => `
+                    flex items-center justify-between px-4 py-2 rounded-xl text-sm font-medium transition-all w-full text-left group
+                    ${isActive
+                      ? 'bg-gray-100 dark:bg-gray-800/50 text-text-primary dark:text-white'
+                      : 'text-text-secondary dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900 hover:text-text-primary dark:hover:text-white'
+                    }
+                  `}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`material-symbols-outlined text-[18px] ${item.color} opacity-80 group-hover:opacity-100`}>folder</span>
+                    {item.label}
+                  </div>
+                  <span className="text-[10px] font-bold text-gray-300 dark:text-gray-600">{item.count}</span>
+                </NavLink>
+              ))}
+              <button onClick={handleAddFolder} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-text-secondary dark:text-gray-400 hover:text-primary transition-colors">
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                Add Folder
+              </button>
             </div>
-            <span className="text-[10px] font-bold text-gray-300 dark:text-gray-600 group-hover:text-gray-500">{item.count}</span>
-          </NavLink>
-        ))}
+          )}
+        </div>
       </nav>
 
       <div className="p-4 mt-auto border-t border-gray-100 dark:border-gray-800">

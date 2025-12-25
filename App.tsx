@@ -21,6 +21,7 @@ import CampaignDetail from './pages/CampaignDetail';
 import Leaderboard from './pages/Leaderboard';
 import { EntityProfileProvider } from './context/EntityProfileContext';
 import { ToastProvider } from './context/ToastContext';
+import { BidProvider } from './context/BidContext';
 import EntityDrawer from './components/EntityDrawer';
 import ToastContainer from './components/ToastContainer';
 
@@ -220,9 +221,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <ToastProvider>
-        <EntityProfileProvider>
-          <AppContent />
-        </EntityProfileProvider>
+        <BidProvider>
+          <EntityProfileProvider>
+            <AppContent />
+          </EntityProfileProvider>
+        </BidProvider>
       </ToastProvider>
     </Router>
   );
