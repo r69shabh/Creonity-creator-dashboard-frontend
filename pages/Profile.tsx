@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { USER_AVATAR } from '../types';
+import CreatorCard from '../components/gamification/CreatorCard';
+import { MOCK_CREATOR_STATS, BADGES, MOCK_EARNED_BADGES } from '../data/gamificationData';
 
 type ProfileTab = 'details' | 'socials' | 'mediakit' | 'portfolio';
 
@@ -140,27 +142,39 @@ const Profile: React.FC = () => {
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Left Column: Avatar & Basic Stats */}
+                        {/* Left Column: Creator Card & Badges */}
                         <div className="lg:col-span-1 space-y-6">
-                            <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6 flex flex-col items-center text-center -mt-20 relative z-10 shadow-sm">
-                                <div className="relative group cursor-pointer">
-                                    <div className="size-32 rounded-full bg-cover bg-center border-4 border-white dark:border-gray-800 shadow-sm" style={{ backgroundImage: `url("${USER_AVATAR}")` }}></div>
-                                    <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <span className="material-symbols-outlined text-white">edit</span>
-                                    </div>
+                            {/* Creator Card */}
+                            <div className="flex justify-center -mt-32 relative z-10">
+                                <CreatorCard
+                                    name={`${basicInfo.firstName} ${basicInfo.lastName}`}
+                                    avatar={USER_AVATAR}
+                                    niche={niche.category}
+                                    stats={MOCK_CREATOR_STATS}
+                                />
+                            </div>
+
+                            {/* Badges Showcase */}
+                            <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                                <h3 className="font-bold text-text-primary dark:text-white mb-4 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-yellow-500">military_tech</span>
+                                    Earned Badges
+                                </h3>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {BADGES.filter(b => MOCK_EARNED_BADGES.includes(b.id)).slice(0, 6).map((badge) => (
+                                        <div
+                                            key={badge.id}
+                                            className="flex flex-col items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer group"
+                                            title={badge.description}
+                                        >
+                                            <span className="text-2xl mb-1 group-hover:scale-110 transition-transform">{badge.icon}</span>
+                                            <span className="text-[10px] font-medium text-text-secondary dark:text-gray-400 text-center leading-tight">{badge.name}</span>
+                                        </div>
+                                    ))}
                                 </div>
-                                <h3 className="mt-4 font-bold text-lg text-text-primary dark:text-white">{basicInfo.firstName} {basicInfo.lastName}</h3>
-                                <p className="text-sm text-text-secondary dark:text-gray-400 mb-4">{basicInfo.username}</p>
-                                <div className="w-full pt-4 border-t border-border-color dark:border-gray-700 grid grid-cols-2 gap-2">
-                                    <div>
-                                        <p className="font-bold text-text-primary dark:text-white">4.9M</p>
-                                        <p className="text-xs text-text-secondary dark:text-gray-500">Reach</p>
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-text-primary dark:text-white">4.8</p>
-                                        <p className="text-xs text-text-secondary dark:text-gray-500">Rating</p>
-                                    </div>
-                                </div>
+                                <button className="w-full mt-4 py-2 text-xs font-medium text-primary hover:underline">
+                                    View All Badges
+                                </button>
                             </div>
                         </div>
 

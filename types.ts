@@ -20,6 +20,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: 'handshake', label: 'My Work', path: '/collaborations' },
   { icon: 'chat', label: 'Messages', path: '/messages', badge: '3', badgeColor: 'bg-brand-teal text-white' },
   { icon: 'analytics', label: 'Analytics', path: '/analytics' },
+  { icon: 'emoji_events', label: 'Leaderboard', path: '/leaderboard' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
   { icon: 'person', label: 'Profile', path: '/profile' },
   { icon: 'settings', label: 'Settings', path: '/settings' },

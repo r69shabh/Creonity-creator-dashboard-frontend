@@ -18,6 +18,7 @@ import Signup from './pages/auth/Signup';
 import Onboarding from './pages/onboarding/Onboarding';
 import Campaigns from './pages/Campaigns';
 import CampaignDetail from './pages/CampaignDetail';
+import Leaderboard from './pages/Leaderboard';
 import { EntityProfileProvider } from './context/EntityProfileContext';
 import { ToastProvider } from './context/ToastContext';
 import EntityDrawer from './components/EntityDrawer';
@@ -55,6 +56,7 @@ const AppRoutes: React.FC<{
       case '/profile': return 'My Creator Profile';
       case '/settings': return 'System Settings';
       case '/messages': return 'Messages';
+      case '/leaderboard': return 'Leaderboard';
       default: return 'Dashboard';
     }
   };
@@ -120,6 +122,7 @@ const AppRoutes: React.FC<{
             <Route path="/collaborations/:id" element={<CollaborationDetail />} />
             <Route path="/drive/:folderName" element={<FolderView />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/settings" element={<Settings darkMode={darkMode} toggleTheme={toggleTheme} />} />
