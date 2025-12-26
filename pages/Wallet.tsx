@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { AreaChart, Area, ResponsiveContainer, XAxis, Tooltip } from 'recharts';
 import Card from '../components/ui/Card';
 import TutorialOverlay, { TutorialStep } from '../components/TutorialOverlay';
 
@@ -24,6 +25,38 @@ const WALLET_TUTORIAL_STEPS: TutorialStep[] = [
   }
 ];
 
+// Monthly earnings data for chart
+const monthlyEarningsData = [
+  { month: 'Jan', earnings: 2850 },
+  { month: 'Feb', earnings: 3200 },
+  { month: 'Mar', earnings: 4100 },
+  { month: 'Apr', earnings: 3800 },
+  { month: 'May', earnings: 4500 },
+  { month: 'Jun', earnings: 5200 },
+  { month: 'Jul', earnings: 4800 },
+  { month: 'Aug', earnings: 5600 },
+  { month: 'Sep', earnings: 4250 },
+  { month: 'Oct', earnings: 5100 },
+  { month: 'Nov', earnings: 4900 },
+  { month: 'Dec', earnings: 5450 },
+];
+
+// Calculate metrics from data
+const currentMonthEarnings = monthlyEarningsData[monthlyEarningsData.length - 1].earnings;
+const avgCampaignEarnings = Math.round(monthlyEarningsData.reduce((sum, m) => sum + m.earnings, 0) / monthlyEarningsData.length);
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white dark:bg-gray-900 p-3 border border-border-color dark:border-gray-700 rounded-lg shadow-lg">
+        <p className="text-sm font-bold text-text-primary dark:text-white">{label}</p>
+        <p className="text-sm text-green-600 dark:text-green-400">${payload[0].value.toLocaleString()}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const Wallet: React.FC = () => {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
@@ -43,7 +76,7 @@ const Wallet: React.FC = () => {
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto h-full flex flex-col gap-8 p-6 relative">
+    <div className="max-w-[1200px] mx-auto h-full flex flex-col gap-6 p-6 relative">
       <TutorialOverlay
         isOpen={showTutorial}
         steps={WALLET_TUTORIAL_STEPS}
@@ -51,6 +84,7 @@ const Wallet: React.FC = () => {
         onSkip={handleTutorialComplete}
       />
 
+      {/* Primary Metrics */}
       <section id="wallet-cards" className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card hoverable>
           <div className="flex items-start justify-between mb-4">
@@ -99,6 +133,70 @@ const Wallet: React.FC = () => {
             <p className="text-xs text-text-secondary dark:text-gray-400">Ready for immediate withdrawal</p>
           </div>
         </Card>
+      </section>
+
+      {/* Additional Earnings Analytics */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Earnings Metrics */}
+        <div className="grid grid-cols-2 gap-4">
+          <Card hoverable className="flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-1.5 rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+                <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+              </div>
+              <span className="text-xs font-medium text-text-secondary dark:text-gray-400">This Month</span>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-text-primary dark:text-white">${currentMonthEarnings.toLocaleString()}</h3>
+              <p className="text-[10px] text-green-600 dark:text-green-400 flex items-center gap-0.5">
+                <span className="material-symbols-outlined text-[12px]">trending_up</span> +8.2% vs last month
+              </p>
+            </div>
+          </Card>
+          <Card hoverable className="flex flex-col justify-between">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
+                <span className="material-symbols-outlined text-[18px]">avg_pace</span>
+              </div>
+              <span className="text-xs font-medium text-text-secondary dark:text-gray-400">Avg / Campaign</span>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-text-primary dark:text-white">${avgCampaignEarnings.toLocaleString()}</h3>
+              <p className="text-[10px] text-text-secondary dark:text-gray-500">Based on 24 campaigns</p>
+            </div>
+          </Card>
+        </div>
+
+        {/* Monthly Earnings Trend Chart */}
+        <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-medium text-text-primary dark:text-white">Monthly Earnings Trend</h3>
+              <p className="text-xs text-text-secondary dark:text-gray-400">Your income over the past 12 months</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-text-secondary dark:text-gray-400">Total:</span>
+              <span className="text-sm font-bold text-green-600 dark:text-green-400">
+                ${monthlyEarningsData.reduce((sum, m) => sum + m.earnings, 0).toLocaleString()}
+              </span>
+            </div>
+          </div>
+          <div className="h-40">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={monthlyEarningsData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="walletGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="earnings" stroke="#10B981" strokeWidth={2} fillOpacity={1} fill="url(#walletGradient)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </section>
 
       <section id="wallet-history" className="flex flex-col gap-4">

@@ -4,7 +4,7 @@ import EntityProfileContent from '../components/EntityProfileContent';
 type ProfileView = 'none' | 'company' | 'manager';
 
 const Messages: React.FC<{ onMenuClick: () => void }> = ({ onMenuClick }) => {
-   const [showInfo, setShowInfo] = useState(true);
+   const [showInfo, setShowInfo] = useState(false);
    const [activeProfile, setActiveProfile] = useState<ProfileView>('none');
 
    return (
@@ -23,52 +23,56 @@ const Messages: React.FC<{ onMenuClick: () => void }> = ({ onMenuClick }) => {
                </div>
             </div>
             <div className="flex-1 overflow-y-auto no-scrollbar bg-white dark:bg-gray-900">
-               {/* Active Chat Item */}
-               <div className="flex items-start gap-3 p-4 bg-white dark:bg-gray-800 border-l-4 border-primary cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+               {/* Active Chat Item - Simplified */}
+               <div className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 border-l-4 border-primary cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                   <div className="relative shrink-0">
-                     <div className="size-10 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden">
+                     <div className="size-10 rounded-full border border-gray-100 dark:border-gray-700 flex items-center justify-center bg-gray-50 dark:bg-gray-900 overflow-hidden">
                         <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaaFbQihFfy-F6e5rien4N3nqD2ZVjagkT3ggFv5wZ2ytBjVxB3e5Lkw-2gUBg_mOc4f5FYiQ0Oyh0IQd8HYm49V1abSGN9so7_FUIO7nIMJVa4dg2k954krxoVARfLWHqET9tWAIrvxZViGNb290HSv5nG2vATLeKmVbexOJ6UPbuv0eQg3kUXQYHoRCJAbwj8L8L7ye9IqMX-sHBm0ehaYkW-GV4TYQsbW4xkfa1C1bLafHNqlfawtpnEGQsoYzRnMwznSWulJ-r" className="w-6 h-6 object-contain" alt="Brand" />
                      </div>
-                     <span className="absolute -bottom-1 -right-1 size-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></span>
+                     <span className="absolute -bottom-0.5 -right-0.5 size-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></span>
                   </div>
                   <div className="flex-1 min-w-0">
-                     <div className="flex items-center justify-between mb-0.5">
+                     <div className="flex items-center justify-between">
                         <span className="text-sm font-bold text-text-primary dark:text-white truncate">TechFlow AI</span>
-                        <span className="text-xs font-medium text-text-primary dark:text-gray-300">10:23 AM</span>
+                        <span className="text-[10px] text-text-secondary dark:text-gray-500">10:23 AM</span>
                      </div>
-                     <div className="text-xs text-text-secondary dark:text-gray-400 font-medium mb-1 truncate">Campaign: VR Headset Unboxing</div>
-                     <p className="text-sm text-text-secondary dark:text-gray-400 truncate">Could you update the draft with the new...</p>
+                     <p className="text-sm text-text-secondary dark:text-gray-400 truncate mt-0.5">Could you update the draft with the new...</p>
                   </div>
                </div>
-               {/* Other Chat Items */}
+               {/* Other Chat Items - Simplified */}
                {[
-                  { name: 'Fizz', time: 'Yesterday', campaign: 'Summer Flavor Drop', msg: 'Payment has been released to escrow.', initial: 'FZ', bg: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' },
-                  { name: 'GameStation', time: 'Oct 28', campaign: 'Retro Console Launch', msg: 'Contract signed! Let\'s get started.', initial: 'GS', bg: 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400', unread: true },
+                  { name: 'Fizz', time: 'Yesterday', msg: 'Payment has been released to escrow.', initial: 'FZ', bg: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400' },
+                  { name: 'GameStation', time: 'Oct 28', msg: 'Contract signed! Let\'s get started.', initial: 'GS', bg: 'bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400', unread: true },
+                  { name: 'FitLife', time: 'Oct 25', msg: 'Looking forward to the collaboration!', initial: 'FL', bg: 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' },
                ].map((chat, i) => (
-                  <div key={i} className="flex items-start gap-3 p-4 border-l-4 border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors border-b border-border-color/50 dark:border-gray-800">
+                  <div key={i} className="flex items-center gap-3 p-4 border-l-4 border-transparent hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors border-b border-border-color/30 dark:border-gray-800">
                      <div className="relative shrink-0">
-                        <div className={`size-10 rounded-lg border border-gray-100 dark:border-gray-700 flex items-center justify-center ${chat.bg} font-bold text-sm`}>
+                        <div className={`size-10 rounded-full border border-gray-100 dark:border-gray-700 flex items-center justify-center ${chat.bg} font-bold text-xs`}>
                            {chat.initial}
                         </div>
                      </div>
                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-0.5">
-                           <span className="text-sm font-bold text-text-primary dark:text-white truncate">{chat.name}</span>
-                           <span className="text-xs text-text-secondary dark:text-gray-500">{chat.time}</span>
+                        <div className="flex items-center justify-between">
+                           <span className={`text-sm font-bold truncate ${chat.unread ? 'text-text-primary dark:text-white' : 'text-text-primary dark:text-gray-300'}`}>{chat.name}</span>
+                           <span className="text-[10px] text-text-secondary dark:text-gray-500">{chat.time}</span>
                         </div>
-                        <div className="text-xs text-text-secondary dark:text-gray-400 font-medium mb-1 truncate">Campaign: {chat.campaign}</div>
-                        <p className={`text-sm text-text-secondary dark:text-gray-400 truncate ${chat.unread ? 'font-semibold text-text-primary dark:text-gray-200' : ''}`}>{chat.msg}</p>
+                        <p className={`text-sm truncate mt-0.5 ${chat.unread ? 'text-text-primary dark:text-gray-200 font-medium' : 'text-text-secondary dark:text-gray-400'}`}>{chat.msg}</p>
                      </div>
-                     {chat.unread && <div className="size-2 bg-primary rounded-full mt-2 shrink-0"></div>}
+                     {chat.unread && <div className="size-2 bg-primary rounded-full shrink-0"></div>}
                   </div>
                ))}
             </div>
          </div>
 
+
          {/* Main Chat Area */}
          <div className="hidden md:flex flex-1 flex-col h-full bg-white dark:bg-gray-900 relative min-w-0">
             <div className="h-16 px-6 border-b border-border-color dark:border-gray-700 flex items-center justify-between shrink-0 bg-white dark:bg-gray-900 z-10 transition-colors">
-               <div className="flex flex-col">
+               <div
+                  className="flex flex-col cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setShowInfo(true)}
+                  title="View profile details"
+               >
                   <h2 className="text-base font-bold text-text-primary dark:text-white flex items-center gap-2">
                      TechFlow AI
                      <span className="material-symbols-outlined text-green-500 text-[16px]" title="Verified Brand">verified</span>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, ResponsiveContainer, XAxis } from 'recharts';
 import { Link } from 'react-router-dom';
+import { INITIAL_NOTIFICATIONS } from '../data/mockData';
 
 const chartData = [
     { name: 'Jan', value: 200 },
@@ -13,7 +14,42 @@ const chartData = [
     { name: 'Aug', value: 800 },
 ];
 
+// Mock deadline data
+const upcomingDeadlines = [
+    { id: 1, campaign: 'VR Headset Unboxing', brand: 'TechFlow AI', dueDate: '2024-01-02', status: 'soon', daysLeft: 3 },
+    { id: 2, campaign: 'Summer Flavor Drop', brand: 'Fizz', dueDate: '2024-01-05', status: 'upcoming', daysLeft: 6 },
+    { id: 3, campaign: 'Retro Console Launch', brand: 'GameStation', dueDate: '2024-01-01', status: 'overdue', daysLeft: -1 },
+    { id: 4, campaign: 'Fitness App Review', brand: 'FitLife', dueDate: '2024-01-10', status: 'upcoming', daysLeft: 11 },
+];
+
 const Dashboard: React.FC = () => {
+    const getStatusStyle = (status: string) => {
+        switch (status) {
+            case 'overdue':
+                return 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/30';
+            case 'soon':
+                return 'bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border-amber-100 dark:border-amber-900/30';
+            default:
+                return 'bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-100 dark:border-gray-700';
+        }
+    };
+
+    const getStatusLabel = (status: string, daysLeft: number) => {
+        if (status === 'overdue') return 'Overdue';
+        if (status === 'soon') return `${daysLeft} days left`;
+        return `${daysLeft} days`;
+    };
+
+    const getNotificationIcon = (type: string) => {
+        switch (type) {
+            case 'bid': return { icon: 'gavel', color: 'text-blue-600 bg-blue-50 dark:bg-blue-900/30 dark:text-blue-400' };
+            case 'alert': return { icon: 'timer', color: 'text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-400' };
+            case 'payment': return { icon: 'payments', color: 'text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400' };
+            case 'message': return { icon: 'chat', color: 'text-purple-600 bg-purple-50 dark:bg-purple-900/30 dark:text-purple-400' };
+            default: return { icon: 'notifications', color: 'text-gray-600 bg-gray-100 dark:bg-gray-800 dark:text-gray-400' };
+        }
+    };
+
     return (
         <div className="max-w-5xl mx-auto p-6 lg:p-8 space-y-6">
             {/* Header */}
@@ -119,6 +155,74 @@ const Dashboard: React.FC = () => {
                             <span className="text-[10px] font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded self-start">{item.match}</span>
                         </Link>
                     ))}
+                </div>
+            </div>
+
+            {/* Contextual Priorities: Deadlines + Notifications */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Upcoming Deadlines */}
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[20px] text-amber-500">schedule</span>
+                            <h3 className="font-medium text-text-primary dark:text-white">Upcoming Deadlines</h3>
+                        </div>
+                        <Link to="/collaborations" className="text-xs font-medium text-primary hover:underline">View All</Link>
+                    </div>
+                    <div className="space-y-3">
+                        {upcomingDeadlines.slice(0, 4).map((item) => (
+                            <div
+                                key={item.id}
+                                className={`flex items-center justify-between p-3 rounded-lg border ${item.status === 'overdue'
+                                        ? 'border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10'
+                                        : item.status === 'soon'
+                                            ? 'border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10'
+                                            : 'border-border-color dark:border-gray-700'
+                                    }`}
+                            >
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-text-primary dark:text-white truncate">{item.campaign}</p>
+                                    <p className="text-xs text-text-secondary dark:text-gray-400">{item.brand}</p>
+                                </div>
+                                <span className={`text-[10px] font-bold px-2 py-1 rounded-full border ${getStatusStyle(item.status)}`}>
+                                    {getStatusLabel(item.status, item.daysLeft)}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Recent Notifications */}
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                            <span className="material-symbols-outlined text-[20px] text-blue-500">notifications</span>
+                            <h3 className="font-medium text-text-primary dark:text-white">Recent Notifications</h3>
+                        </div>
+                        <Link to="/messages" className="text-xs font-medium text-primary hover:underline">View All</Link>
+                    </div>
+                    <div className="space-y-3">
+                        {INITIAL_NOTIFICATIONS.slice(0, 4).map((item) => {
+                            const style = getNotificationIcon(item.type);
+                            return (
+                                <div key={item.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors cursor-pointer">
+                                    <div className={`size-8 rounded-full ${style.color} flex items-center justify-center shrink-0`}>
+                                        <span className="material-symbols-outlined text-[16px]">{style.icon}</span>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <p className={`text-sm truncate ${item.unread ? 'font-medium text-text-primary dark:text-white' : 'text-text-secondary dark:text-gray-400'}`}>
+                                                {item.title}
+                                            </p>
+                                            <span className="text-[10px] text-text-secondary dark:text-gray-500 whitespace-nowrap">{item.time}</span>
+                                        </div>
+                                        <p className="text-xs text-text-secondary dark:text-gray-400 truncate">{item.desc}</p>
+                                    </div>
+                                    {item.unread && <div className="size-2 bg-primary rounded-full mt-1.5 shrink-0"></div>}
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </div>

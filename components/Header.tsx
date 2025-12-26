@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { INITIAL_NOTIFICATIONS } from '../data/mockData';
-import Avatar from './ui/Avatar';
+import ProfileMenu from './ProfileMenu';
 
 interface HeaderProps {
   title: string;
   onMenuClick: () => void;
+  onLogout?: () => void;
+  darkMode?: boolean;
+  toggleTheme?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
+const Header: React.FC<HeaderProps> = ({ title, onMenuClick, onLogout, darkMode, toggleTheme }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -53,6 +56,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
       </div>
 
       <div className="flex items-center gap-3 ml-auto relative">
+        {/* Notifications */}
         <div ref={notificationRef} className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
@@ -99,6 +103,15 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick }) => {
             </div>
           )}
         </div>
+
+        {/* Profile Menu */}
+        {onLogout && (
+          <ProfileMenu
+            onLogout={onLogout}
+            darkMode={darkMode}
+            toggleTheme={toggleTheme}
+          />
+        )}
       </div>
     </header>
   );

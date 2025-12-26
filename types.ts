@@ -22,9 +22,8 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: 'analytics', label: 'Analytics', path: '/analytics' },
   { icon: 'emoji_events', label: 'Leaderboard', path: '/leaderboard' },
   { icon: 'account_balance_wallet', label: 'Wallet', path: '/wallet' },
-  { icon: 'person', label: 'Profile', path: '/profile' },
-  { icon: 'settings', label: 'Settings', path: '/settings' },
 ];
+
 
 export const DRIVE_FOLDERS: DriveFolder[] = [
   { color: 'text-brand-blue', label: 'Contracts', count: 12 },

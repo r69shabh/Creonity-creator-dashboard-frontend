@@ -105,6 +105,9 @@ const AppRoutes: React.FC<{
           <Header
             title={getPageTitle(location.pathname)}
             onMenuClick={() => setMobileMenuOpen(true)}
+            onLogout={logout}
+            darkMode={darkMode}
+            toggleTheme={toggleTheme}
           />
         )}
 

@@ -357,6 +357,110 @@ const Analytics: React.FC = () => {
             </Card>
          </div>
 
+         {/* Creator Performance Signals */}
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Brand Rating */}
+            <Card className="flex flex-col">
+               <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-text-primary dark:text-white">Brand Rating</h3>
+                  <div className="relative group">
+                     <span className="material-symbols-outlined text-[18px] text-text-secondary dark:text-gray-400 cursor-help">info</span>
+                     <div className="absolute right-0 top-full mt-2 w-48 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                        How brands rate working with you based on completed campaigns
+                     </div>
+                  </div>
+               </div>
+               <div className="flex-1 flex flex-col items-center justify-center py-4">
+                  <div className="flex items-center gap-1 mb-2">
+                     {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                           key={star}
+                           className={`material-symbols-outlined text-[28px] ${star <= 4 ? 'text-yellow-400' : star <= 4.9 ? 'text-yellow-400/50' : 'text-gray-300 dark:text-gray-600'}`}
+                        >
+                           {star <= 4.9 ? 'star' : 'star'}
+                        </span>
+                     ))}
+                  </div>
+                  <p className="text-3xl font-bold text-text-primary dark:text-white">4.9</p>
+                  <p className="text-xs text-text-secondary dark:text-gray-400 mt-1">Based on 24 brand reviews</p>
+               </div>
+               <div className="grid grid-cols-3 gap-2 pt-4 border-t border-border-color dark:border-gray-700">
+                  <div className="text-center">
+                     <p className="text-sm font-bold text-text-primary dark:text-white">98%</p>
+                     <p className="text-[10px] text-text-secondary dark:text-gray-400">On-Time</p>
+                  </div>
+                  <div className="text-center">
+                     <p className="text-sm font-bold text-text-primary dark:text-white">100%</p>
+                     <p className="text-[10px] text-text-secondary dark:text-gray-400">Quality</p>
+                  </div>
+                  <div className="text-center">
+                     <p className="text-sm font-bold text-text-primary dark:text-white">35%</p>
+                     <p className="text-[10px] text-text-secondary dark:text-gray-400">Repeat Hire</p>
+                  </div>
+               </div>
+            </Card>
+
+            {/* Followers Growth Chart */}
+            <Card className="lg:col-span-2">
+               <div className="flex items-center justify-between mb-4">
+                  <div>
+                     <h3 className="text-lg font-bold text-text-primary dark:text-white">Followers Growth</h3>
+                     <p className="text-xs text-text-secondary dark:text-gray-400">Monthly growth across platforms</p>
+                  </div>
+               </div>
+               <div className="h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <AreaChart
+                        data={[
+                           { month: 'Jul', youtube: 118, instagram: 82, tiktok: 230, twitter: 42 },
+                           { month: 'Aug', youtube: 120, instagram: 84, tiktok: 238, twitter: 43 },
+                           { month: 'Sep', youtube: 121, instagram: 85, tiktok: 245, twitter: 44 },
+                           { month: 'Oct', youtube: 122, instagram: 87, tiktok: 250, twitter: 44 },
+                           { month: 'Nov', youtube: 124, instagram: 88, tiktok: 254, twitter: 45 },
+                           { month: 'Dec', youtube: 124.5, instagram: 89.2, tiktok: 256.1, twitter: 45.3 },
+                        ]}
+                        margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                     >
+                        <defs>
+                           <linearGradient id="youtubeGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#EF4444" stopOpacity={0.2} />
+                              <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
+                           </linearGradient>
+                           <linearGradient id="tiktokGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#000000" stopOpacity={0.1} />
+                              <stop offset="95%" stopColor="#000000" stopOpacity={0} />
+                           </linearGradient>
+                        </defs>
+                        <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94A3B8' }} />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Area type="monotone" dataKey="tiktok" stroke="#000000" strokeWidth={2} fillOpacity={1} fill="url(#tiktokGrad)" name="TikTok" />
+                        <Area type="monotone" dataKey="youtube" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#youtubeGrad)" name="YouTube" />
+                        <Area type="monotone" dataKey="instagram" stroke="#E4405F" strokeWidth={1.5} fillOpacity={0} name="Instagram" />
+                        <Area type="monotone" dataKey="twitter" stroke="#1DA1F2" strokeWidth={1.5} fillOpacity={0} name="Twitter" />
+                     </AreaChart>
+                  </ResponsiveContainer>
+               </div>
+               <div className="flex items-center justify-center gap-4 mt-3">
+                  <div className="flex items-center gap-1.5">
+                     <div className="size-2.5 rounded-full bg-black dark:bg-white"></div>
+                     <span className="text-[10px] text-text-secondary dark:text-gray-400">TikTok</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                     <div className="size-2.5 rounded-full bg-red-500"></div>
+                     <span className="text-[10px] text-text-secondary dark:text-gray-400">YouTube</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                     <div className="size-2.5 rounded-full bg-pink-500"></div>
+                     <span className="text-[10px] text-text-secondary dark:text-gray-400">Instagram</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                     <div className="size-2.5 rounded-full bg-blue-400"></div>
+                     <span className="text-[10px] text-text-secondary dark:text-gray-400">Twitter</span>
+                  </div>
+               </div>
+            </Card>
+         </div>
+
          {/* KPI Detail Modal */}
          {selectedKPI && <KPIDetailModal data={kpiDetails[selectedKPI]} onClose={() => setSelectedKPI(null)} />}
       </div>
