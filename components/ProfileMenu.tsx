@@ -49,8 +49,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout, darkMode, toggleThe
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`flex items-center gap-2 p-1.5 rounded-lg transition-colors ${isOpen
-                        ? 'bg-gray-100 dark:bg-gray-800'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                    ? 'bg-gray-100 dark:bg-gray-800'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                 aria-label="Profile menu"
             >
@@ -66,7 +66,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout, darkMode, toggleThe
 
             {/* Dropdown Menu */}
             {isOpen && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-float border border-border-color dark:border-gray-700 overflow-hidden z-50 origin-top-right animate-in fade-in zoom-in-95 duration-200">
+                <div className="absolute top-full right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-xl shadow-float border border-border-color dark:border-gray-700 overflow-hidden z-[100] origin-top-right animate-in fade-in zoom-in-95 duration-200">
 
                     {/* Creator Summary Card */}
                     <div className="p-4 bg-gradient-to-br from-primary/5 to-transparent dark:from-primary/10 border-b border-border-color dark:border-gray-700">
@@ -107,8 +107,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout, darkMode, toggleThe
                         <button
                             onClick={() => setActiveTab('profile')}
                             className={`flex-1 px-4 py-2.5 text-sm font-medium transition-colors relative ${activeTab === 'profile'
-                                    ? 'text-primary dark:text-white'
-                                    : 'text-text-secondary dark:text-gray-400 hover:text-text-primary dark:hover:text-white'
+                                ? 'text-primary dark:text-white'
+                                : 'text-text-secondary dark:text-gray-400 hover:text-text-primary dark:hover:text-white'
                                 }`}
                         >
                             Profile
@@ -119,8 +119,8 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ onLogout, darkMode, toggleThe
                         <button
                             onClick={() => setActiveTab('settings')}
                             className={`flex-1 px-4 py-2.5 text-sm font-medium transition-colors relative ${activeTab === 'settings'
-                                    ? 'text-primary dark:text-white'
-                                    : 'text-text-secondary dark:text-gray-400 hover:text-text-primary dark:hover:text-white'
+                                ? 'text-primary dark:text-white'
+                                : 'text-text-secondary dark:text-gray-400 hover:text-text-primary dark:hover:text-white'
                                 }`}
                         >
                             Settings

@@ -48,7 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ mobileMenuOpen, setMobileMenuOpen, on
     <aside
       className={`
         fixed lg:static inset-y-0 left-0 z-30
-        w-[280px] flex flex-col border-r border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/90 backdrop-blur-xl h-full
+        w-[280px] flex flex-col border-r border-gray-200/60 dark:border-gray-800 bg-sidebar-bg dark:bg-gray-950/90 h-full
         transition-transform duration-300 ease-in-out
         ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}

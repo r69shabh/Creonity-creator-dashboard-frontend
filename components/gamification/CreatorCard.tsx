@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CardRarity, RARITY_THRESHOLDS, CreatorStats, getRarityFromEarnings } from '../../data/gamificationData';
+import { CreatorTier, TIER_THRESHOLDS, CreatorStats, getTierFromEarnings } from '../../data/gamificationData';
 
 interface CreatorCardProps {
     name: string;
@@ -12,43 +12,42 @@ interface CreatorCardProps {
 
 const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, compact = false, onClick }) => {
     const [showBackground, setShowBackground] = useState(true);
-    const rarity = getRarityFromEarnings(stats.lifetimeEarnings);
-    const rarityConfig = RARITY_THRESHOLDS[rarity];
+    const tier = getTierFromEarnings(stats.lifetimeEarnings);
+    const tierConfig = TIER_THRESHOLDS[tier];
 
-    // Background styles based on rarity
+    // Background styles based on tier
     const getBackgroundStyle = (): React.CSSProperties => {
         if (!showBackground) return { background: '#1a1a2e' };
 
-        switch (rarity) {
-            case 'diamond':
+        switch (tier) {
+            case 'legend':
                 return {
-                    background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #4c1d95 100%)',
                 };
-            case 'platinum':
+            case 'elite':
                 return {
-                    background: 'linear-gradient(135deg, #2d2d44 0%, #3d3d5c 50%, #4d4d6d 100%)',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #3d2a14 50%, #78350f 100%)',
                 };
-            case 'gold':
+            case 'pro':
                 return {
-                    background: 'linear-gradient(135deg, #1a1a2e 0%, #2d1f0f 50%, #3d2a14 100%)',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #1e3a5f 50%, #1e40af 100%)',
                 };
-            case 'silver':
+            case 'rising':
                 return {
-                    background: 'linear-gradient(135deg, #1a1a2e 0%, #2a2a3e 50%, #3a3a4e 100%)',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #134e4a 50%, #0d9488 100%)',
                 };
-            default: // bronze
+            default: // rookie
                 return {
-                    background: 'linear-gradient(135deg, #1a1a2e 0%, #2d1a1a 50%, #3d2424 100%)',
+                    background: 'linear-gradient(135deg, #1a1a2e 0%, #374151 50%, #4b5563 100%)',
                 };
         }
     };
 
-    // Particle animation CSS for higher rarities
+    // Particle animation CSS for higher tiers
     const getParticleClass = () => {
         if (!showBackground) return '';
-        if (rarity === 'diamond') return 'animate-shimmer-diamond';
-        if (rarity === 'platinum') return 'animate-shimmer-platinum';
-        if (rarity === 'gold') return 'animate-shimmer-gold';
+        if (tier === 'legend') return 'animate-pulse';
+        if (tier === 'elite') return '';
         return '';
     };
 
@@ -59,10 +58,10 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
                 style={getBackgroundStyle()}
                 onClick={onClick}
             >
-                {/* Rarity glow */}
+                {/* Tier glow */}
                 <div
                     className="absolute inset-0 opacity-20 blur-xl"
-                    style={{ backgroundColor: rarityConfig.color }}
+                    style={{ backgroundColor: tierConfig.color }}
                 />
 
                 {/* Avatar */}
@@ -71,7 +70,7 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
                         src={avatar}
                         alt={name}
                         className="w-20 h-20 rounded-full object-cover border-2"
-                        style={{ borderColor: rarityConfig.color }}
+                        style={{ borderColor: tierConfig.color }}
                     />
                 </div>
 
@@ -80,12 +79,12 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
                     <p className="text-white text-xs font-bold truncate text-center">{name}</p>
                 </div>
 
-                {/* Rarity badge */}
+                {/* Tier badge */}
                 <div
-                    className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase"
-                    style={{ backgroundColor: rarityConfig.color, color: rarity === 'platinum' || rarity === 'silver' ? '#000' : '#fff' }}
+                    className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase flex items-center gap-0.5"
+                    style={{ backgroundColor: `${tierConfig.color}30`, color: tierConfig.color }}
                 >
-                    {rarity}
+                    {tierConfig.icon}
                 </div>
             </div>
         );
@@ -105,12 +104,12 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
                 }}
             />
 
-            {/* Rarity glow effect */}
+            {/* Tier glow effect */}
             {showBackground && (
                 <div
                     className="absolute inset-0 opacity-10"
                     style={{
-                        background: `radial-gradient(circle at 50% 80%, ${rarityConfig.color} 0%, transparent 60%)`,
+                        background: `radial-gradient(circle at 50% 80%, ${tierConfig.color} 0%, transparent 60%)`,
                     }}
                 />
             )}
@@ -119,22 +118,22 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
             <div
                 className="absolute inset-0 rounded-2xl pointer-events-none"
                 style={{
-                    border: `2px solid ${rarityConfig.color}40`,
-                    boxShadow: `inset 0 0 30px ${rarityConfig.color}10`,
+                    border: `2px solid ${tierConfig.color}40`,
+                    boxShadow: `inset 0 0 30px ${tierConfig.color}10`,
                 }}
             />
 
-            {/* Rarity Badge - Top Left */}
+            {/* Tier Badge - Top Left */}
             <div
                 className="absolute top-4 left-4 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 backdrop-blur-sm"
                 style={{
-                    backgroundColor: `${rarityConfig.color}20`,
-                    color: rarityConfig.color,
-                    border: `1px solid ${rarityConfig.color}40`,
+                    backgroundColor: `${tierConfig.color}20`,
+                    color: tierConfig.color,
+                    border: `1px solid ${tierConfig.color}40`,
                 }}
             >
-                <span>⬥</span>
-                {rarityConfig.label}
+                <span>{tierConfig.icon}</span>
+                {tierConfig.label}
             </div>
 
             {/* Niche - Top Right */}
@@ -147,15 +146,15 @@ const CreatorCard: React.FC<CreatorCardProps> = ({ name, avatar, niche, stats, c
                 <div className="relative">
                     <div
                         className="absolute -inset-2 rounded-full blur-xl opacity-40"
-                        style={{ backgroundColor: rarityConfig.color }}
+                        style={{ backgroundColor: tierConfig.color }}
                     />
                     <img
                         src={avatar}
                         alt={name}
                         className="relative w-32 h-32 rounded-full object-cover shadow-2xl"
                         style={{
-                            border: `3px solid ${rarityConfig.color}`,
-                            boxShadow: `0 0 30px ${rarityConfig.color}40`,
+                            border: `3px solid ${tierConfig.color}`,
+                            boxShadow: `0 0 30px ${tierConfig.color}40`,
                         }}
                     />
                 </div>

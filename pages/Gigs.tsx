@@ -160,7 +160,7 @@ const Gigs: React.FC = () => {
             </div>
 
             {/* Search & Filters */}
-            <div id="gigs-filters" className="flex flex-col gap-4 mb-6 shrink-0 z-20">
+            <div id="gigs-filters" className="flex flex-col gap-4 mb-6 shrink-0">
                 <div className="relative max-w-2xl">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                         <span className="material-symbols-outlined text-[20px]">search</span>
@@ -170,7 +170,7 @@ const Gigs: React.FC = () => {
                         placeholder="Search by brand, keyword, or vibe..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-sm placeholder-gray-400"
+                        className="w-full h-11 pl-11 pr-4 rounded-lg border border-gray-200/60 dark:border-gray-700 bg-white dark:bg-gray-800 text-text-primary dark:text-white focus:ring-2 focus:ring-primary/15 focus:border-gray-300 transition-all outline-none text-sm placeholder-gray-400"
                     />
                 </div>
 

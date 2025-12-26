@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AreaChart, Area, ResponsiveContainer, XAxis } from 'recharts';
 import { Link } from 'react-router-dom';
 import { INITIAL_NOTIFICATIONS } from '../data/mockData';
@@ -23,6 +23,23 @@ const upcomingDeadlines = [
 ];
 
 const Dashboard: React.FC = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'));
+        };
+        checkDarkMode();
+        const observer = new MutationObserver(checkDarkMode);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return () => observer.disconnect();
+    }, []);
+
+    // Theme-aware chart colors
+    const chartColor = isDarkMode ? '#1BD1C9' : '#E87B5A';
+    const chartOpacity = isDarkMode ? 0.2 : 0.15;
+    const tickColor = isDarkMode ? '#94A3B8' : '#9B9B9B';
+
     const getStatusStyle = (status: string) => {
         switch (status) {
             case 'overdue':
@@ -71,7 +88,7 @@ const Dashboard: React.FC = () => {
                     { label: 'This Month', value: '$4,250', icon: 'payments', color: 'text-green-500', bg: 'bg-green-500/10', link: '/wallet' },
                     { label: 'Win Rate', value: '28%', icon: 'trending_up', color: 'text-teal-500', bg: 'bg-teal-500/10', link: '/analytics' },
                 ].map((stat, i) => (
-                    <Link key={i} to={stat.link} className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 hover:border-primary/50 transition-colors group">
+                    <Link key={i} to={stat.link} className="p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors group">
                         <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${stat.bg} ${stat.color} mb-3`}>
                             <span className="material-symbols-outlined text-[20px]">{stat.icon}</span>
                         </div>
@@ -84,7 +101,7 @@ const Dashboard: React.FC = () => {
             {/* Chart + Quick Actions */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Earnings Chart */}
-                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="font-medium text-text-primary dark:text-white">Earnings Trend</h3>
                         <span className="text-xs text-text-secondary dark:text-gray-400">Last 8 months</span>
@@ -94,19 +111,19 @@ const Dashboard: React.FC = () => {
                             <AreaChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
                                 <defs>
                                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="#1BD1C9" stopOpacity={0.2} />
-                                        <stop offset="95%" stopColor="#1BD1C9" stopOpacity={0} />
+                                        <stop offset="5%" stopColor={chartColor} stopOpacity={chartOpacity} />
+                                        <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: '#94A3B8' }} />
-                                <Area type="monotone" dataKey="value" stroke="#1BD1C9" strokeWidth={2} fillOpacity={1} fill="url(#colorValue)" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: tickColor }} />
+                                <Area type="monotone" dataKey="value" stroke={chartColor} strokeWidth={2} fillOpacity={1} fill="url(#colorValue)" />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 {/* Quick Actions */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 p-6">
                     <h3 className="font-medium text-text-primary dark:text-white mb-4">Quick Actions</h3>
                     <div className="space-y-2">
                         {[
@@ -132,7 +149,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Recommended Gigs */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="font-medium text-text-primary dark:text-white">Recommended for You</h3>
                     <Link to="/gigs" className="text-xs font-medium text-primary hover:underline">View All</Link>
@@ -143,7 +160,7 @@ const Dashboard: React.FC = () => {
                         { title: 'Lifestyle Vlog', brand: 'Lululemon', budget: '$1.2k', match: '95%', img: 'https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=100&h=100&fit=crop' },
                         { title: 'App Promo', brand: 'Notion', budget: '$600', match: '92%', img: 'https://images.unsplash.com/photo-1555421689-3f034debb7a6?w=100&h=100&fit=crop' },
                     ].map((item, i) => (
-                        <Link key={i} to="/gigs/1" className="flex gap-3 p-3 rounded-lg border border-border-color dark:border-gray-700 hover:border-primary/50 transition-colors group">
+                        <Link key={i} to="/gigs/1" className="flex gap-3 p-3 rounded-lg border border-gray-200/50 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors group">
                             <img src={item.img} alt={item.brand} className="w-12 h-12 rounded-lg object-cover shrink-0" />
                             <div className="flex-1 min-w-0">
                                 <p className="font-medium text-sm text-text-primary dark:text-white truncate group-hover:text-primary">{item.title}</p>
@@ -161,7 +178,7 @@ const Dashboard: React.FC = () => {
             {/* Contextual Priorities: Deadlines + Notifications */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Upcoming Deadlines */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 p-6">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <span className="material-symbols-outlined text-[20px] text-amber-500">schedule</span>
@@ -174,10 +191,10 @@ const Dashboard: React.FC = () => {
                             <div
                                 key={item.id}
                                 className={`flex items-center justify-between p-3 rounded-lg border ${item.status === 'overdue'
-                                        ? 'border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10'
-                                        : item.status === 'soon'
-                                            ? 'border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10'
-                                            : 'border-border-color dark:border-gray-700'
+                                    ? 'border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10'
+                                    : item.status === 'soon'
+                                        ? 'border-amber-200/60 dark:border-amber-900/50 bg-amber-50/30 dark:bg-amber-900/10'
+                                        : 'border-gray-200/50 dark:border-gray-700'
                                     }`}
                             >
                                 <div className="flex-1 min-w-0">
@@ -193,7 +210,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Recent Notifications */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-border-color dark:border-gray-700 p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200/50 dark:border-gray-700 p-6">
                     <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                             <span className="material-symbols-outlined text-[20px] text-blue-500">notifications</span>

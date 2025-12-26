@@ -47,7 +47,7 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, onLogout, darkMode,
   };
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 py-4 border-b border-border-color dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-20 transition-colors">
+    <header className="h-16 flex items-center justify-between px-6 py-4 border-b border-gray-200/40 dark:border-gray-800 bg-background-light dark:bg-gray-900/80 dark:backdrop-blur-sm sticky top-0 z-50 transition-colors">
       <div className="flex items-center gap-4">
         <button onClick={onMenuClick} className="lg:hidden p-2 text-text-secondary hover:text-text-primary dark:text-gray-400 dark:hover:text-white" aria-label="Open menu">
           <span className="material-symbols-outlined">menu</span>
